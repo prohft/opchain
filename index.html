@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpChain · Black–Gold–Green 16:9 Deck</title>
+  <title>OpChain - Options Dashboard Indicator for TradingView</title>
+  <meta name="description" content="OpChain transforms complex option chain data into clear trading signals. Get directional bias, strike-side pressure, and spot-futures alignment in one dashboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #020309;
@@ -13,516 +17,1140 @@
       --gold-soft: #f3de9c;
       --green: #2fe564;
       --green-soft: #63f49a;
+      --red: #ff4757;
+      --red-soft: #ff6b7a;
       --text-main: #f7f5f0;
       --text-soft: #d1cdc0;
       --text-muted: #9a9586;
       --radius-xl: 26px;
       --radius-lg: 20px;
+      --radius-md: 12px;
     }
-    * { box-sizing: border-box; }
-    html, body {
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
+      background: radial-gradient(circle at 15% 0%, rgba(99, 247, 150, 0.08), transparent 50%),
+                  radial-gradient(circle at 85% 100%, rgba(237, 201, 112, 0.12), transparent 55%),
+                  linear-gradient(145deg, #020309, #050713);
       color: var(--text-main);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif;
-      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
     }
-    body {
+
+    .container {
+      width: min(calc(100% - 2rem), 1200px);
+      margin-inline: auto;
+      padding-inline: 1.5rem;
+    }
+
+    /* Header / Navigation */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 7, 19, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(216, 177, 90, 0.2);
+      padding: 1.25rem 0;
+    }
+
+    .header-inner {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
     }
-    .deck {
-      position: relative;
-      width: min(100vw, 1920px);
-      aspect-ratio: 16 / 9;
-      border-radius: 32px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 12% 0%, rgba(99, 247, 150, 0.26), transparent 55%),
-        radial-gradient(circle at 88% 100%, rgba(237, 201, 112, 0.5), transparent 60%),
-        linear-gradient(145deg, #020309, #050713);
-      box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9);
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--gold), var(--green-soft));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .slide {
-      position: absolute;
-      inset: 0;
+
+    .nav-links {
       display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-soft);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 5rem 0 4rem;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transform: translateX(40px);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-      pointer-events: none;
-    }
-    .slide.active {
-      opacity: 1;
-      transform: translateX(0);
-      pointer-events: auto;
-    }
-    .frame {
-      width: calc(100% - 96px);
-      height: calc(100% - 80px);
-      margin: 40px 48px;
-      border-radius: 28px;
-      background: radial-gradient(circle at 0 0, rgba(99, 247, 150, 0.16), transparent 50%),
-                  radial-gradient(circle at 100% 100%, rgba(243, 222, 156, 0.16), transparent 52%),
-                  linear-gradient(135deg, #050713, #020309);
-      border: 1px solid rgba(216, 177, 90, 0.55);
-      padding: 32px 46px;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.85);
-    }
-    .label {
-      letter-spacing: 0.26em;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(47, 229, 100, 0.12);
+      border: 1px solid rgba(47, 229, 100, 0.3);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--green-soft);
+      margin-bottom: 1.5rem;
       text-transform: uppercase;
-      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-main), var(--gold-soft));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      color: var(--text-soft);
+      max-width: 800px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    /* Exclusivity Notice */
+    .exclusivity-notice {
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+      padding: 1.25rem 1.75rem;
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.12), rgba(216, 177, 90, 0.12));
+      border: 1px solid rgba(255, 71, 87, 0.4);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .exclusivity-icon {
+      flex-shrink: 0;
+      font-size: 1.5rem;
+      margin-top: 0.1rem;
+    }
+
+    .exclusivity-notice h3 {
+      font-size: 1.1rem;
+      color: var(--gold-soft);
+      margin-bottom: 0.5rem;
+    }
+
+    .exclusivity-notice p {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.8rem;
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), #1fb352);
+      color: #000;
+      box-shadow: 0 8px 24px rgba(47, 229, 100, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(47, 229, 100, 0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(216, 177, 90, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(216, 177, 90, 0.4);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(216, 177, 90, 0.25);
+      border-color: var(--gold);
+    }
+
+    /* Dashboard Preview */
+    .dashboard-preview {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(216, 177, 90, 0.3);
+    }
+
+    .dashboard-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Problem Section */
+    .section {
+      padding: 5rem 0;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.15rem;
+      color: var(--text-soft);
+      max-width: 700px;
+      margin: 0 auto 3rem;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .problem-card {
+      background: radial-gradient(circle at top left, rgba(216, 177, 90, 0.08), transparent 70%),
+                  var(--bg-panel);
+      border: 1px solid rgba(216, 177, 90, 0.25);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .problem-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(216, 177, 90, 0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .problem-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-main);
+    }
+
+    .problem-card p {
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: radial-gradient(circle at bottom right, rgba(47, 229, 100, 0.08), transparent 60%),
+                  var(--bg-panel-soft);
+      border: 1px solid rgba(47, 229, 100, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, rgba(47, 229, 100, 0.25), rgba(47, 229, 100, 0.1));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--green-soft);
+    }
+
+    .feature-card p {
+      color: var(--text-soft);
+      line-height: 1.75;
+    }
+
+    /* How It Works */
+    .workflow-steps {
+      max-width: 800px;
+      margin: 3rem auto 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #000;
+    }
+
+    .step-content h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-main);
+    }
+
+    .step-content p {
+      color: var(--text-soft);
+      line-height: 1.75;
+    }
+
+    /* Screenshot Gallery */
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .screenshot-item {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(216, 177, 90, 0.3);
+      transition: transform 0.3s;
+    }
+
+    .screenshot-item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+
+    .screenshot-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Social Proof / Telegram CTA */
+    .telegram-cta {
+      background: radial-gradient(circle at center, rgba(47, 229, 100, 0.15), transparent 70%),
+                  var(--bg-panel);
+      border: 1px solid rgba(47, 229, 100, 0.3);
+      border-radius: var(--radius-xl);
+      padding: 4rem 3rem;
+      text-align: center;
+      margin: 4rem 0;
+    }
+
+    .telegram-cta h2 {
+      font-size: 2.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .telegram-cta p {
+      font-size: 1.15rem;
+      color: var(--text-soft);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    /* Support Info Section */
+    .support-info {
+      background: var(--bg-panel);
+      border: 1px solid rgba(216, 177, 90, 0.25);
+      border-radius: var(--radius-xl);
+      padding: 3.5rem 3rem;
+      margin: 4rem 0;
+    }
+
+    .support-channels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .support-channel {
+      padding: 2rem;
+      background: rgba(47, 229, 100, 0.05);
+      border: 1px solid rgba(47, 229, 100, 0.2);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+
+    .support-channel-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1.25rem;
+      background: linear-gradient(135deg, rgba(47, 229, 100, 0.2), rgba(47, 229, 100, 0.1));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .support-channel h4 {
+      font-size: 1.2rem;
+      color: var(--green-soft);
+      margin-bottom: 0.75rem;
+    }
+
+    .support-channel p {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .support-channel .btn {
+      font-size: 0.9rem;
+      padding: 0.7rem 1.4rem;
+    }
+
+    .coming-soon-badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      background: rgba(216, 177, 90, 0.2);
+      border: 1px solid rgba(216, 177, 90, 0.4);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: var(--gold);
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Referral Program */
+    .referral-section {
+      background: radial-gradient(circle at top, rgba(216, 177, 90, 0.12), transparent 60%),
+                  var(--bg-panel-soft);
+      border: 1px solid rgba(216, 177, 90, 0.25);
+      border-radius: var(--radius-xl);
+      padding: 4rem 3rem;
+      text-align: center;
+    }
+
+    .referral-benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .benefit-item {
+      padding: 1.5rem;
+    }
+
+    .benefit-item h4 {
+      font-size: 1.25rem;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .benefit-item p {
+      color: var(--text-soft);
+    }
+
+    /* FAQ Section */
+    .faq-list {
+      max-width: 800px;
+      margin: 3rem auto 0;
+    }
+
+    .faq-item {
+      background: var(--bg-panel);
+      border: 1px solid rgba(216, 177, 90, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .faq-item h3 {
+      font-size: 1.25rem;
+      color: var(--gold-soft);
+      margin-bottom: 1rem;
+    }
+
+    .faq-item p {
+      color: var(--text-soft);
+      line-height: 1.75;
+    }
+
+    /* Final CTA */
+    .final-cta {
+      background: linear-gradient(135deg, 
+        rgba(47, 229, 100, 0.15), 
+        rgba(216, 177, 90, 0.15));
+      border: 2px solid var(--gold);
+      border-radius: var(--radius-xl);
+      padding: 5rem 3rem;
+      text-align: center;
+      margin: 5rem 0;
+    }
+
+    .final-cta h2 {
+      font-size: 2.75rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--green-soft), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .final-cta p {
+      font-size: 1.25rem;
+      color: var(--text-soft);
+      margin-bottom: 2.5rem;
+    }
+
+    /* Social Links */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(216, 177, 90, 0.1);
+      border: 1px solid rgba(216, 177, 90, 0.3);
+      border-radius: var(--radius-md);
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+
+    .social-link:hover {
+      background: rgba(216, 177, 90, 0.2);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid rgba(216, 177, 90, 0.2);
+      padding: 3rem 0 2rem;
+      text-align: center;
       color: var(--text-muted);
     }
-    h1, h2, h3 { margin: 0; letter-spacing: -0.03em; }
-    h1 { font-size: 46px; }
-    h2 { font-size: 34px; }
-    p { margin: 0; }
-    .hero-grid {
-      margin-top: 30px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-      gap: 44px;
-      align-items: center;
-    }
-    .badge-row {
-      margin-top: 22px;
+
+    .footer-links {
       display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
-      gap: 10px;
     }
-    .badge {
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(47, 229, 100, 0.6);
-      background: rgba(3, 19, 10, 0.9);
-      font-size: 11px;
-      color: var(--green-soft);
-    }
-    .card-main {
-      border-radius: var(--radius-xl);
-      background: radial-gradient(circle at 0 0, rgba(99, 247, 150, 0.24), transparent 56%),
-                  radial-gradient(circle at 100% 100%, rgba(243, 222, 156, 0.26), transparent 60%),
-                  linear-gradient(135deg, #050713, #020309);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 22px 22px 18px;
-      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.9);
-      font-size: 13px;
-    }
-    .scenario-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(3, 28, 13, 0.96);
-      border: 1px solid rgba(111, 255, 170, 0.6);
-      color: var(--green-soft);
-      font-size: 11px;
-    }
-    .dot-green {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: var(--green);
-      box-shadow: 0 0 14px rgba(47, 229, 100, 0.9);
-    }
-    .scenario-header {
-      margin-top: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-    .scenario-title { font-size: 18px; font-weight: 600; }
-    .scenario-strength { text-align: right; }
-    .scenario-strength-value { font-size: 26px; font-weight: 700; color: var(--gold-soft); }
-    .scenario-strength-label { font-size: 11px; color: var(--text-muted); }
-    .bar {
-      margin-top: 4px;
-      width: 150px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.14);
-      overflow: hidden;
-    }
-    .bar-inner {
-      width: 82%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--green), var(--gold-soft));
-    }
-    .mini-grid {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
-      font-size: 11px;
+
+    .footer-links a {
       color: var(--text-soft);
+      text-decoration: none;
+      transition: color 0.25s;
     }
-    .mini-header { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); }
-    .mini-box { background: rgba(3,7,20,0.92); border-radius: 14px; padding: 6px 7px; border: 1px solid rgba(255,255,255,0.08); }
-    .strategy-row {
-      margin-top: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--text-soft);
+
+    .footer-links a:hover {
+      color: var(--green);
     }
-    .strategy-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(10, 30, 17, 0.96);
-      border: 1px solid rgba(111, 255, 170, 0.6);
-      color: var(--green-soft);
-      font-size: 11px;
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .hero {
+        padding: 3rem 0 2rem;
+      }
+
+      .section {
+        padding: 3rem 0;
+      }
+
+      .cta-group {
+        flex-direction: column;
+      }
+
+      .step {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .telegram-cta, .referral-section, .final-cta, .support-info {
+        padding: 3rem 2rem;
+      }
+
+      .final-cta h2 {
+        font-size: 2rem;
+      }
+
+      .exclusivity-notice {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .support-channels {
+        grid-template-columns: 1fr;
+      }
     }
-    .logo-mark {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 5%, #fff, var(--gold));
-      box-shadow: 0 0 24px rgba(216,177,90,0.9);
-      display:flex;align-items:center;justify-content:center;
-      color:#000;font-weight:700;font-size:14px;
-    }
-    .footer-line {
-      display:flex;justify-content:space-between;align-items:center;
-      font-size:10px;color:var(--text-muted);margin-top:10px;
-    }
-    .two-col {
-      margin-top: 26px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
-      gap: 32px;
-    }
-    .card {
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, var(--bg-panel), var(--bg-panel-soft));
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 18px 18px 14px;
-      font-size: 13px;
-      color: var(--text-soft);
-      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.75);
-    }
-    .chip {
-      display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;
-      background:rgba(3,19,10,0.92);border:1px solid rgba(47,229,100,0.65);
-      color:var(--green-soft);font-size:10px;
-    }
-    .card-title { margin-top: 8px; font-size: 17px; font-weight: 600; color: var(--text-main); }
-    .bullet { margin-top: 6px; }
-    .bottom-meta { display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text-muted);margin-top:10px; }
-    .nav {
-      position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
-      display:flex;align-items:center;gap:10px;
-      padding:5px 13px;border-radius:999px;
-      background:rgba(2,3,12,0.96);border:1px solid rgba(216,177,90,0.7);
-      font-size:11px;color:var(--text-soft);
-    }
-    .nav-btn {width:24px;height:24px;border-radius:999px;border:none;background:rgba(5,9,22,0.96);color:var(--gold-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    .dots {display:flex;gap:6px;}
-    .dot {width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,0.18);cursor:pointer;}
-    .dot.active {background:var(--green);box-shadow:0 0 12px rgba(47,229,100,0.9);}
   </style>
 </head>
 <body>
-  <div class="deck">
-    <!-- Slide 1: Overview -->
-    <section class="slide active" data-id="1">
-      <div class="frame">
-        <div>
-          <div class="label">OpChain · Options-Chain Scenario Engine</div>
-          <div style="margin-top:14px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start;">
-            <div>
-              <h1>Read structure.<br/>Trade with context.</h1>
-              <p style="margin-top:16px;font-size:16px;line-height:1.6;color:var(--text-soft);max-width:520px;">OpChain converts noisy option-chain behaviour into clean scenarios like Strong Buy, Neutral or Strong Sell with a strength score and strategy hint – in one 16:9-ready dashboard.</p>
-              <div class="badge-row">
-                <div class="badge">Black · Gold · Green premium theme</div>
-                <div class="badge">Intraday & short-term traders</div>
-                <div class="badge">TradingView & video friendly</div>
-              </div>
-            </div>
-            <div class="card-main">
-              <div class="scenario-pill"><span class="dot-green"></span>Live scenario snapshot</div>
-              <div class="scenario-header">
-                <div>
-                  <div class="scenario-title">Strong Buy · Futures aligned</div>
-                  <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">Spot, futures & strikes favour bullish continuation.</div>
-                </div>
-                <div class="scenario-strength">
-                  <div class="scenario-strength-value">82%</div>
-                  <div class="scenario-strength-label">Structure strength</div>
-                  <div class="bar"><div class="bar-inner"></div></div>
-                </div>
-              </div>
-              <div class="mini-grid" style="margin-top:16px;">
-                <div class="mini-box">
-                  <div class="mini-header">Calls</div>
-                  <div style="margin-top:4px;">10 / 11 strikes</div>
-                  <div style="margin-top:2px;color:var(--green-soft);">45% green</div>
-                </div>
-                <div class="mini-box">
-                  <div class="mini-header">Puts</div>
-                  <div style="margin-top:4px;">8 / 11 strikes</div>
-                  <div style="margin-top:2px;color:#ffb3b3;">36% red</div>
-                </div>
-                <div class="mini-box">
-                  <div class="mini-header">Scenario</div>
-                  <div style="margin-top:4px;">Strong Buy</div>
-                  <div style="margin-top:2px;color:var(--gold-soft);">SB · 82%</div>
-                </div>
-                <div class="mini-box">
-                  <div class="mini-header">Time</div>
-                  <div style="margin-top:4px;">Fresh CE / PE stamps</div>
-                  <div style="margin-top:2px;">Last change: recent</div>
-                </div>
-              </div>
-              <div class="strategy-row">
-                <div class="strategy-pill"><span style="width:12px;height:12px;border-radius:999px;border:2px solid var(--green-soft);"></span>Strategy hint: Bull Call Spread</div>
-                <div>Hints are contextual, not advice.</div>
-              </div>
-              <div class="footer-line">
-                <div style="display:flex;align-items:center;gap:8px;"><div class="logo-mark">O</div><span>OpChain · Options-Chain Dashboard</span></div>
-                <div>16:9 slide · ready for PowerPoint / Keynote / video</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-        <div class="bottom-meta"><span>Use this slide as your hero frame for YouTube and sales.</span><span>Slide 1 · Overview</span></div>
-      </div>
-    </section>
 
-    <!-- Slide 2: What it solves -->
-    <section class="slide" data-id="2">
-      <div class="frame">
-        <div>
-          <div class="label">What OpChain solves</div>
-          <h2 style="margin-top:10px;">From scattered options data to one glance.</h2>
-          <div class="two-col">
-            <div class="card">
-              <div class="chip">Decision-support</div>
-              <div class="card-title">One place to read structure</div>
-              <div class="bullet">• Combines call/put behaviour, spot and futures into a single scenario row with a strength percentage.</div>
-              <div class="bullet">• Removes the need to flip between separate option chains, futures charts and watchlists during fast moves.</div>
-              <div class="bullet">• Keeps the internal logic private – only scenario, strength and hints are exposed.</div>
-            </div>
-            <div class="card">
-              <div class="chip">Execution & discipline</div>
-              <div class="card-title">Trade the plan, not the noise</div>
-              <div class="bullet">• Highlights high-alignment states (Strong Buy / Strong Sell) versus mixed or neutral conditions.</div>
-              <div class="bullet">• Shows transitions like Neutral Buy / Neutral Sell that matter for partial exits and scaling in.</div>
-              <div class="bullet">• Encourages rule-based decisions instead of impulsive entries on isolated candles.</div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-        <div class="bottom-meta"><span>Designed as a confirmation layer on top of your analysis.</span><span>Slide 2 · Problem → Solution</span></div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">OpChain</div>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#support">Support</a></li>
+            <li><a href="#referral">Earn Referrals</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+          <button class="mobile-menu-toggle" aria-label="Menu">☰</button>
+        </nav>
       </div>
-    </section>
-
-    <!-- Slide 3: Scenario framework -->
-    <section class="slide" data-id="3">
-      <div class="frame">
-        <div>
-          <div class="label">Scenario language</div>
-          <h2 style="margin-top:10px;">A quick vocabulary for market conditions.</h2>
-          <div class="two-col">
-            <div class="card">
-              <div class="chip">Bullish & transition</div>
-              <div class="card-title">Strong Buy · Buy · Neutral Buy</div>
-              <div class="bullet">• Strong Buy: broad call/put + spot/futures alignment favouring upside continuation.</div>
-              <div class="bullet">• Buy: bullish bias with slightly less alignment – good for intraday continuation and scaling.</div>
-              <div class="bullet">• Neutral Buy: improvement from bearish or neutral structure, often an early sign to watch for long setups.</div>
-            </div>
-            <div class="card">
-              <div class="chip">Neutral & bearish</div>
-              <div class="card-title">Neutral · Neutral Sell · Sell · Strong Sell</div>
-              <div class="bullet">• Neutral: balanced or mixed; better for reduced size or range-based structures.</div>
-              <div class="bullet">• Neutral Sell: pressure shifting bearish – useful for trimming longs and preparing shorts.</div>
-              <div class="bullet">• Sell / Strong Sell: downside alignment building; time to protect long carry or express a defensive bias.</div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-        <div class="bottom-meta"><span>Scenario labels show structure, not guaranteed direction.</span><span>Slide 3 · Scenario framework</span></div>
-      </div>
-    </section>
-
-    <!-- Slide 4: Timeframes & flips -->
-    <section class="slide" data-id="4">
-      <div class="frame">
-        <div>
-          <div class="label">Practical playbook</div>
-          <h2 style="margin-top:10px;">Timeframes, flips and carry-forward rules.</h2>
-          <div class="two-col">
-            <div class="card">
-              <div class="chip">Session handling</div>
-              <div class="card-title">Choosing timeframe & logic mode</div>
-              <div class="bullet">• 5-minute + Slow mode: default for most sessions – cleaner structure and easier for beginners.</div>
-              <div class="bullet">• 1-minute: use during big gap opens or fast volatility spikes to see how scenarios rebuild.</div>
-              <div class="bullet">• Fast mode: helpful in choppy markets, but requires tighter risk management because of added noise.</div>
-              <div class="bullet">• Keep higher timeframes (15m / 1h) in mind for context; OpChain works on the execution timeframe.</div>
-            </div>
-            <div class="card">
-              <div class="chip">Carry-forward behaviour</div>
-              <div class="card-title">Previous day vs next day</div>
-              <div class="bullet">• Gradual flips from Strong Sell → Sell → Neutral → Buy → Strong Buy into the close often support next-day buying, even after modest gap-downs, if the environment is stable.</div>
-              <div class="bullet">• Sudden flips (e.g., Strong Sell close → gap-up open) demand caution – intraday upside may be tradable, but overnight bullish carry is more fragile.</div>
-              <div class="bullet">• Treat such sudden changes as potential traps unless structure later rebuilds gradually in the new direction.</div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-        <div class="bottom-meta"><span>Let scenario transitions guide aggression, not just entries.</span><span>Slide 4 · Timeframes & flips</span></div>
-      </div>
-    </section>
-
-    <!-- Slide 5: Position sizing & confirmation -->
-    <section class="slide" data-id="5">
-      <div class="frame">
-        <div>
-          <div class="label">Risk & position sizing</div>
-          <h2 style="margin-top:10px;">Let size follow scenario quality.</h2>
-          <div class="two-col">
-            <div class="card">
-              <div class="chip">Sizing logic</div>
-              <div class="card-title">Adjust exposure with structure</div>
-              <div class="bullet">• During corrections with Strong Sell / Sell, focus on protecting capital and expressing cautious shorts.</div>
-              <div class="bullet">• When structure improves to Neutral then Neutral Buy, close shorts and begin building long exposure gradually.</div>
-              <div class="bullet">• Increase size only when scenarios advance to Buy or Strong Buy and price action supports the move.</div>
-              <div class="bullet">• Avoid max size in mixed or rapidly flipping conditions; keep trades smaller and shorter.</div>
-            </div>
-            <div class="card">
-              <div class="chip">Confirmation layer</div>
-              <div class="card-title">OpChain + your own analysis</div>
-              <div class="bullet">• Start with your existing process: price action, liquidity zones, higher timeframe trend and event calendar.</div>
-              <div class="bullet">• Use OpChain to confirm or challenge your idea – alignment should raise conviction, conflict should slow you down.</div>
-              <div class="bullet">• Keep a journal: note which scenario transitions work best on your symbols and when to ignore weaker readings.</div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-        <div class="bottom-meta"><span>OpChain supports your edge – it does not replace it.</span><span>Slide 5 · Sizing & confirmation</span></div>
-      </div>
-    </section>
-
-    <!-- Slide 6: Product & content uses -->
-    <section class="slide" data-id="6">
-      <div class="frame">
-        <div>
-          <div class="label">Product & content</div>
-          <h2 style="margin-top:10px;">How OpChain fits into your trading business.</h2>
-          <div class="two-col">
-            <div class="card">
-              <div class="chip">For traders</div>
-              <div class="card-title">Daily execution companion</div>
-              <div class="bullet">• Run OpChain on TradingView alongside your favourite indicators or clean price charts.</div>
-              <div class="bullet">• Use scenarios to filter trades, manage exits and avoid overtrading when structure is mixed.</div>
-              <div class="bullet">• Apply across indices, stock options and selected US names with the same workflow.</div>
-            </div>
-            <div class="card">
-              <div class="chip">For your brand</div>
-              <div class="card-title">Premium OpChain storyline</div>
-              <div class="bullet">• This deck becomes your visual narrative for YouTube videos, X threads, Telegram posts and sales calls.</div>
-              <div class="bullet">• Black–Gold–Green theme matches a wealth / growth identity and your tree logo style.</div>
-              <div class="bullet">• Core logic stays private while traders see clear structure, rules and risk notes.</div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-        <div class="bottom-meta"><span>One visual story you can reuse everywhere.</span><span>Slide 6 · Use cases</span></div>
-      </div>
-    </section>
-
-    <!-- Slide 7: Closing CTA -->
-    <section class="slide" data-id="7">
-      <div class="frame">
-        <div>
-          <div class="label">Closing frame</div>
-          <h2 style="margin-top:10px;">Black · Gold · Green — the OpChain signature look.</h2>
-          <div class="hero-grid" style="margin-top:24px;grid-template-columns:minmax(0,0.95fr) minmax(0,1.05fr);">
-            <div>
-              <p style="font-size:16px;line-height:1.7;color:var(--text-soft);max-width:520px;">Use this deck as your premium, 16:9-ready OpChain story: record it into a YouTube walkthrough, present it live on calls, or slice each slide into posts across X, Telegram and your website.</p>
-              <p style="margin-top:14px;font-size:16px;line-height:1.7;color:var(--text-soft);">All the focus stays where it should be: structure, discipline and practical trading rules – while the proprietary signal engine remains protected inside your code.</p>
-            </div>
-            <div class="card-main" style="padding:20px 20px 16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                <div class="scenario-pill"><span class="dot-green"></span>OpChain · Launch-ready deck</div>
-                <div style="font-size:10px;color:var(--text-muted);">16:9 · Full HD friendly</div>
-              </div>
-              <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-size:13px;color:var(--text-soft);">
-                <div>
-                  <div style="font-size:22px;font-weight:700;color:var(--gold-soft);">01</div>
-                  <div style="margin-top:6px;">Scenario engine explained in trader language.</div>
-                </div>
-                <div>
-                  <div style="font-size:22px;font-weight:700;color:var(--gold-soft);">02</div>
-                  <div style="margin-top:6px;">Slides double as YouTube frames & promo visuals.</div>
-                </div>
-                <div>
-                  <div style="font-size:22px;font-weight:700;color:var(--gold-soft);">03</div>
-                  <div style="margin-top:6px;">Matches your black–gold–green brand identity.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div></div>
-        <div class="bottom-meta"><span>Next step: export these slides to PPTX / Keynote or record as video.</span><span>Slide 7 · Call-to-action</span></div>
-      </div>
-    </section>
-
-    <!-- Navigation -->
-    <div class="nav">
-      <button class="nav-btn" data-dir="-1">&#8249;</button>
-      <div class="dots"></div>
-      <button class="nav-btn" data-dir="1">&#8250;</button>
-      <span style="margin-left:6px;">Arrow keys / click to navigate</span>
     </div>
-  </div>
+  </header>
 
-  <script>
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const dotsBox = document.querySelector('.dots');
-    let index = 0;
-    slides.forEach((s, i) => {
-      const d = document.createElement('div');
-      d.className = 'dot' + (i === 0 ? ' active' : '');
-      d.onclick = () => show(i);
-      dotsBox.appendChild(d);
-    });
-    function show(i) {
-      slides[index].classList.remove('active');
-      dotsBox.children[index].classList.remove('active');
-      index = (i + slides.length) % slides.length;
-      slides[index].classList.add('active');
-      dotsBox.children[index].classList.add('active');
-    }
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.onclick = () => {
-        const dir = Number(btn.dataset.dir);
-        show(index + dir);
-      };
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(index + 1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
-    });
-  </script>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        ✨ Built for Active Intraday Traders
+      </div>
+      <h1>Read Option Markets<br/>Like a Pro Trader</h1>
+      <p>
+        OpChain transforms complex option chain data into clear, actionable scenarios. 
+        Get directional bias, strike-side pressure, and spot-futures alignment in one compact dashboard.
+      </p>
+
+      <!-- Exclusivity Notice -->
+      <div class="exclusivity-notice">
+        <div class="exclusivity-icon">🔒</div>
+        <div>
+          <h3>Limited Early Access</h3>
+          <p>
+            To maintain exclusivity and effectiveness, OpChain access is limited to the first batch of users only. 
+            We believe in keeping this tool exclusive rather than generalizing it for majority market participants. 
+            Early adopters get priority support and lifetime updates.
+          </p>
+        </div>
+      </div>
+
+      <div class="cta-group">
+        <a href="https://www.youtube.com/@OpChainTrade" target="_blank" rel="noopener" class="btn btn-primary">
+          <span>Watch Demo on YouTube</span>
+          <span>→</span>
+        </a>
+        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener" class="btn btn-secondary">Request Early Access</a>
+      </div>
+      <div class="dashboard-preview">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='600'%3E%3Crect fill='%23050713' width='1000' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%239a9586' font-size='24' font-family='Inter'%3EDashboard Preview%3C/text%3E%3C/svg%3E" alt="OpChain Dashboard Preview" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section class="section" id="problems">
+    <div class="container">
+      <div class="section-label">The Challenge</div>
+      <h2 class="section-title">Most Traders Face These Problems</h2>
+      <p class="section-subtitle">
+        Traditional option chain analysis is slow, scattered, and overwhelming during live market hours.
+      </p>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">📊</div>
+          <h3>Too Many Tabs</h3>
+          <p>
+            Option chain, chart, spot, futures, and signals split across multiple screens. 
+            By the time you piece it together, the opportunity is gone.
+          </p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">⏱️</div>
+          <h3>Late to the Move</h3>
+          <p>
+            When the setup finally feels obvious, the move is already underway and risk-reward has deteriorated.
+          </p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">🌀</div>
+          <h3>Indicator Overload</h3>
+          <p>
+            Too many indicators create noise instead of clarity. You need cleaner decision-making, not more clutter.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution / Features -->
+  <section class="section" id="features" style="background: rgba(5, 7, 19, 0.6);">
+    <div class="container">
+      <div class="section-label">The Solution</div>
+      <h2 class="section-title">OpChain: Your Trading Command Center</h2>
+      <p class="section-subtitle">
+        A compact decision layer for traders who want speed, structure, and cleaner bias reading during live sessions.
+      </p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Market Bias at a Glance</h3>
+          <p>
+            See Strong Buy, Buy, Neutral, Sell, or Strong Sell scenarios with strength percentage. 
+            No more piecing together data from multiple tools.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Strike-Side Pressure</h3>
+          <p>
+            Read call-side and put-side directional pressure in a clean strike table. 
+            Identify where momentum is building without scanning full option chains.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>Spot-Futures Alignment</h3>
+          <p>
+            Check whether spot and futures context support the same direction. 
+            Judge alignment faster without bouncing between disconnected charts.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Strategy Hints</h3>
+          <p>
+            Get broad posture suggestions like Bull Call Spread, Iron Condor, Bear Put Spread. 
+            A contextual guide, not a forced recommendation.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🕒</div>
+          <h3>Live Timestamps</h3>
+          <p>
+            Track when signals updated on call and put sides. 
+            Know which side has fresher activity for better timing.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎓</div>
+          <h3>Built for Learning</h3>
+          <p>
+            Perfect for demo videos, training content, and replay-based learning. 
+            Use the same framework for education and live trading.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-label">Workflow</div>
+      <h2 class="section-title">How OpChain Works</h2>
+      <p class="section-subtitle">
+        A simple, structured reading flow for fast-moving intraday sessions.
+      </p>
+      <div class="workflow-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Check the Main Scenario</h3>
+            <p>
+              Start with the scenario row: Strong Buy, Buy, Neutral Buy, Neutral, Neutral Sell, Sell, or Strong Sell. 
+              This gives you immediate directional context.
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Note the Strength Percentage</h3>
+            <p>
+              Higher percentages indicate broader alignment across monitored strikes. 
+              Lower values suggest mixed structure or the need for patience.
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Verify Spot-Futures Context</h3>
+            <p>
+              Confirm whether spot and futures indicators support the same directional side. 
+              Alignment increases conviction.
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Scan the Strike Table</h3>
+          <p>
+              Review call-side (CE) and put-side (PE) directional markers. 
+              Check if the structure is broadly aligned or still mixed.
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h3>Make Your Decision</h3>
+            <p>
+              Align OpChain's reading with your own price-action view. 
+              Enter when both agree, or exercise patience when structure is unclear.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots / Visual Demo -->
+  <section class="section" id="demo" style="background: rgba(5, 7, 19, 0.6);">
+    <div class="container">
+      <div class="section-label">See It in Action</div>
+      <h2 class="section-title">Dashboard in Action</h2>
+      <p class="section-subtitle">
+        Real screenshots showing how OpChain displays scenarios, strike tables, and market context.
+      </p>
+      <div class="screenshot-grid">
+        <div class="screenshot-item">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23050713' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%239a9586' font-size='16' font-family='Inter'%3EScenario View%3C/text%3E%3C/svg%3E" alt="Scenario View" />
+        </div>
+        <div class="screenshot-item">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23050713' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%239a9586' font-size='16' font-family='Inter'%3EStrike Table%3C/text%3E%3C/svg%3E" alt="Strike Table" />
+        </div>
+        <div class="screenshot-item">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23050713' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%239a9586' font-size='16' font-family='Inter'%3ESettings Panel%3C/text%3E%3C/svg%3E" alt="Settings Panel" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Support & Contact Section -->
+  <section class="section" id="support">
+    <div class="container">
+      <div class="support-info">
+        <div class="section-label">Get Help</div>
+        <h2 class="section-title">Customer Support</h2>
+        <p class="section-subtitle">
+          We're here to help you get the most out of OpChain. Currently, support is available through the following channels.
+        </p>
+
+        <div class="support-channels">
+          <div class="support-channel">
+            <div class="support-channel-icon">💬</div>
+            <h4>Telegram Support</h4>
+            <p>
+              Get instant responses to your questions. Connect with us directly on Telegram for personalized assistance.
+            </p>
+            <a href="https://t.me/Prohft" target="_blank" rel="noopener" class="btn btn-primary">
+              Chat on Telegram
+            </a>
+          </div>
+
+          <div class="support-channel">
+            <div class="support-channel-icon">𝕏</div>
+            <h4>Twitter/X DM</h4>
+            <p>
+              Reach out via direct message on X (Twitter) for sales inquiries and general questions.
+            </p>
+            <a href="https://x.com/Prohft" target="_blank" rel="noopener" class="btn btn-primary">
+              Message on X
+            </a>
+          </div>
+
+          <div class="support-channel">
+            <div class="support-channel-icon">📧</div>
+            <h4>Email Support</h4>
+            <p>
+              Send us detailed inquiries, feedback, or technical questions via email.
+            </p>
+            <a href="mailto:prohftech@gmail.com" class="btn btn-primary">
+              Send Email
+            </a>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: rgba(216, 177, 90, 0.1); border-radius: var(--radius-lg); border: 1px solid rgba(216, 177, 90, 0.3);">
+          <h4 style="color: var(--gold-soft); margin-bottom: 0.75rem; font-size: 1.15rem;">📞 Phone Support</h4>
+          <p style="color: var(--text-soft); margin-bottom: 1rem;">
+            Voice call support will be available once we build our support team. Stay tuned for updates!
+          </p>
+          <span class="coming-soon-badge">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Telegram Signal Channel CTA -->
+  <section class="section" id="telegram">
+    <div class="container">
+      <div class="telegram-cta">
+        <h2>Join Our Private Telegram Channel</h2>
+        <p>
+          Get free access to live trading signals, market analysis, and OpChain insights. 
+          Join a community of active traders improving their intraday decision-making.
+        </p>
+        <a href="https://t.me/+gg1BAyQXvwg1ODE1" target="_blank" rel="noopener" class="btn btn-primary" style="display: inline-flex;">
+          <span>Join Free Telegram Channel</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Referral / Influencer Program -->
+  <section class="section" id="referral" style="background: rgba(5, 7, 19, 0.6);">
+    <div class="container">
+      <div class="referral-section">
+        <div class="section-label">Earn with OpChain</div>
+        <h2 class="section-title">Referral Program for Influencers</h2>
+        <p class="section-subtitle">
+          Are you a trading educator, YouTuber, or influencer? Partner with us and earn referral income 
+          by helping your audience discover OpChain.
+        </p>
+        <div class="referral-benefits">
+          <div class="benefit-item">
+            <h4>🤝 Generous Commission</h4>
+            <p>Earn competitive referral fees for every successful subscription.</p>
+          </div>
+          <div class="benefit-item">
+            <h4>🎯 Easy Promotion</h4>
+            <p>Get custom referral links, demo materials, and marketing support.</p>
+          </div>
+          <div class="benefit-item">
+            <h4>📊 Real-Time Tracking</h4>
+            <p>Track your referrals and earnings through a simple dashboard.</p>
+          </div>
+        </div>
+        <a href="https://t.me/Prohft" target="_blank" rel="noopener" class="btn btn-secondary" style="margin-top: 2rem; display: inline-flex;">
+          Contact Us on Telegram
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-label">Common Questions</div>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>Why is OpChain access limited?</h3>
+          <p>
+            We believe in maintaining the exclusivity and effectiveness of OpChain by limiting access to serious traders only. 
+            When too many market participants use the same tool, its edge diminishes. Early adopters get priority access and lifetime updates.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3>Is OpChain suitable for beginners?</h3>
+          <p>
+            Yes, but it's most useful for traders who already understand basic chart structure and options trading. 
+            The 5-minute timeframe with slow mode is recommended for beginners.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3>Which timeframe should I use?</h3>
+          <p>
+            The 5-minute timeframe is the most reliable default for most users. 
+            Switch to 1-minute during fast sessions, large gaps, or when you need earlier reversal signals.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3>How can I get support?</h3>
+          <p>
+            Currently, support is available through Telegram, X (Twitter) DM, and email. We provide personalized assistance 
+            to all OpChain users. Phone support will be added once we build our support team.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3>Does OpChain work for replay-based learning?</h3>
+          <p>
+            Absolutely. It's designed around real intraday workflow and is also useful for replay sessions, 
+            training content, and educational demos.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I use OpChain on mobile?</h3>
+          <p>
+            OpChain works on TradingView, which supports mobile viewing. However, the dashboard is optimized 
+            for desktop screens where you can see all strike details clearly.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3>What markets does OpChain support?</h3>
+          <p>
+            OpChain supports both Indian markets (NSE, MCX) and US markets (NASDAQ, OPRA). 
+            Configure your market mode in the settings panel.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="final-cta" id="access">
+        <h2>Ready to Trade Smarter?</h2>
+        <p>
+          Join the exclusive group of traders using OpChain. Limited spots available for early access. 
+          No hype. Just a practical tool for faster, more structured market reading.
+        </p>
+        <div class="cta-group">
+          <a href="https://www.youtube.com/@OpChainTrade" target="_blank" rel="noopener" class="btn btn-primary">
+            <span>Watch Full Demo</span>
+            <span>→</span>
+          </a>
+          <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener" class="btn btn-secondary">Request Early Access</a>
+        </div>
+
+        <div class="social-links">
+          <a href="https://www.youtube.com/@OpChainTrade" target="_blank" rel="noopener" class="social-link">
+            <span>📺</span>
+            <span>YouTube</span>
+          </a>
+          <a href="https://t.me/+gg1BAyQXvwg1ODE1" target="_blank" rel="noopener" class="social-link">
+            <span>💬</span>
+            <span>Telegram Channel</span>
+          </a>
+          <a href="https://x.com/Prohft" target="_blank" rel="noopener" class="social-link">
+            <span>𝕏</span>
+            <span>Twitter/X</span>
+          </a>
+          <a href="mailto:prohftech@gmail.com" class="social-link">
+            <span>📧</span>
+            <span>Email</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#support">Support</a>
+        <a href="#referral">Referral Program</a>
+        <a href="#faq">FAQ</a>
+        <a href="mailto:prohftech@gmail.com">Contact</a>
+      </div>
+      <p>
+        &copy; 2026 OpChain. Built for traders who value structure over noise.
+      </p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+        Disclaimer: OpChain is an analytical tool. It does not guarantee profits and should be used with proper risk management.
+      </p>
+    </div>
+  </footer>
+
 </body>
 </html>
