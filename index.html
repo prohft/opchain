@@ -415,6 +415,84 @@
       height: auto;
       display: block;
     }
+    
+        /* P&L Proof Grid */
+        .pnl-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .pnl-item {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid rgba(47, 229, 100, 0.2);
+            transition: transform 0.3s;
+            background: rgba(5, 7, 19, 0.8);
+        }
+
+        .pnl-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+            border-color: rgba(47, 229, 100, 0.5);
+        }
+
+        .pnl-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .pnl-disclaimer {
+            margin-top: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(216, 177, 90, 0.08);
+            border: 1px solid rgba(216, 177, 90, 0.25);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        /* Testimonials Grid */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-item {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid rgba(216, 177, 90, 0.2);
+            transition: transform 0.3s;
+            background: rgba(5, 7, 19, 0.8);
+        }
+
+        .testimonial-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+            border-color: rgba(216, 177, 90, 0.5);
+        }
+
+        .testimonial-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .coming-soon-note {
+            margin-top: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(47, 229, 100, 0.06);
+            border: 1px solid rgba(47, 229, 100, 0.2);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
 
     /* Social Proof / Telegram CTA */
     .telegram-cta {
@@ -909,56 +987,74 @@
   </section>
 
   <!-- Screenshots / Visual Demo -->
-<section class="section" id="demo" style="background: rgba(5, 7, 19, 0.6);">
-  <div class="container">
-    <div class="section-label">See It in Action</div>
-    <h2 class="section-title">Dashboard in Action</h2>
-    <p class="section-subtitle">
-      Real screenshots showing how OpChain displays scenarios, strike tables, and market context across different market conditions.
-    </p>
-    <div class="screenshot-grid">
-
-      <!-- Scenario Views Section -->
-      <div class="screenshot-item">
-        <img src="scenario-view-1.png" alt="OpChain Strong Buy Scenario with 82% Strength" />
-      </div>
-      <div class="screenshot-item">
-        <img src="scenario-view-2.png" alt="OpChain Neutral Scenario View" />
-      </div>
-      <div class="screenshot-item">
-        <img src="scenario-view-3.png" alt="OpChain Strong Sell Scenario" />
-      </div>
-                  <div class="screenshot-item">
-                <img src="scenario-view-5.png" alt="OpChain Scenario View - Additional" />
+        <!-- Scenario Views Section -->
+        <section class="section" id="scenarios" style="background: rgba(5, 7, 19, 0.6);">
+            <div class="container">
+                <div class="section-label">Live Scenario Views</div>
+                <h2 class="section-title">Scenarios &amp; Strike Table</h2>
+                <p class="section-subtitle">Real OpChain screenshots showing Strong Buy, Neutral, Strong Sell scenarios and strike-wise CE/PE pressure across different market conditions and symbols.</p>
+                <div class="screenshot-grid">
+                    <div class="screenshot-item"><img src="scenario-view-1.png" alt="OpChain Strong Buy Scenario" /></div>
+                    <div class="screenshot-item"><img src="scenario-view-2.png" alt="OpChain Neutral Scenario View" /></div>
+                    <div class="screenshot-item"><img src="scenario-view-3.png" alt="OpChain Strong Sell Scenario" /></div>
+                    <div class="screenshot-item"><img src="scenario-view-4.png" alt="Strike-wise Put Side Analysis" /></div>
+                    <div class="screenshot-item"><img src="scenario-view-5.png" alt="OpChain Scenario View - Additional" /></div>
+                    <div class="screenshot-item"><img src="strike-table.png" alt="Strike-wise Call Side Pressure Analysis" /></div>
+                </div>
             </div>
+        </section>
 
-      <!-- Strike Table Examples -->
-      <div class="screenshot-item">
-        <img src="strike-table.png" alt="Strike-wise Call Side Pressure Analysis" />
-      </div>
-      <div class="screenshot-item">
-        <img src="scenario-view-4.png" alt="Strike-wise Put Side Analysis" />
-      </div>
+        <!-- Indicator Settings Section -->
+        <section class="section" id="settings" style="background: rgba(8, 11, 22, 0.7);">
+            <div class="container">
+                <div class="section-label">Configuration</div>
+                <h2 class="section-title">Indicator Settings Panel</h2>
+                <p class="section-subtitle">OpChain is fully configurable for your symbol, market mode, strike range, expiry, and display preferences. Set it up once and it adapts to your workflow.</p>
+                <div class="screenshot-grid">
+                    <div class="screenshot-item"><img src="settings-panel-1.png" alt="General Settings - Trend Logic Mode" /></div>
+                    <div class="screenshot-item"><img src="settings-panel-2.png" alt="Symbol Configuration Panel" /></div>
+                    <div class="screenshot-item"><img src="settings-panel-3.png" alt="Dynamic Symbol Selection Settings" /></div>
+                    <div class="screenshot-item"><img src="settings-panel.png" alt="Layout and Display Settings" /></div>
+                </div>
+            </div>
+        </section>
 
-      <!-- Settings Panel Views -->
-      <div class="screenshot-item">
-        <img src="settings-panel-1.png" alt="General Settings - Trend Logic Mode Configuration" />
-      </div>
-      <div class="screenshot-item">
-        <img src="settings-panel-2.png" alt="Symbol Configuration Panel" />
-      </div>
-      <div class="screenshot-item">
-        <img src="settings-panel-3.png" alt="Dynamic Symbol Selection Settings" />
-      </div>
-      <div class="screenshot-item">
-        <img src="settings-panel.png" alt="Layout and Display Settings" />
-      </div>
+        <!-- P&L Proof Gallery Section -->
+        <section class="section" id="pnl" style="background: rgba(5, 7, 19, 0.6);">
+            <div class="container">
+                <div class="section-label">Real Results</div>
+                <h2 class="section-title">Personal P&amp;L Proof</h2>
+                <p class="section-subtitle">Transparent trade results and P&amp;L screenshots from real intraday sessions using OpChain. No simulated or backtested equity curves — only real trades.</p>
+                <div class="pnl-grid">
+                    <div class="pnl-item"><img src="pnl1.png" alt="P&amp;L Trade Result 1" /></div>
+                    <div class="pnl-item"><img src="pnl2.png" alt="P&amp;L Trade Result 2" /></div>
+                    <div class="pnl-item"><img src="pnl3.png" alt="P&amp;L Trade Result 3" /></div>
+                    <div class="pnl-item"><img src="pnl4.png" alt="P&amp;L Trade Result 4" /></div>
+                    <div class="pnl-item"><img src="pnl5.png" alt="P&amp;L Trade Result 5" /></div>
+                    <div class="pnl-item"><img src="pnl6.png" alt="P&amp;L Trade Result 6" /></div>
+                </div>
+                <p class="pnl-disclaimer">&#9888;&#65039; Past performance does not guarantee future results. All trades involve risk. This is shared for transparency and educational purposes only.</p>
+            </div>
+        </section>
 
-      <!-- Add more as needed - grid automatically adjusts! -->
+        <!-- Testimonials Section -->
+        <section class="section" id="testimonials" style="background: rgba(8, 11, 22, 0.7);">
+            <div class="container">
+                <div class="section-label">Community Trust</div>
+                <h2 class="section-title">What Traders Are Saying</h2>
+                <p class="section-subtitle">Feedback from early access users who have been using OpChain in live intraday sessions.</p>
+                <div class="testimonials-grid">
+                    <div class="testimonial-item"><img src="trust1.png" alt="Trader Testimonial 1" /></div>
+                    <div class="testimonial-item"><img src="trust2.png" alt="Trader Testimonial 2" /></div>
+                    <div class="testimonial-item"><img src="trust3.png" alt="Trader Testimonial 3" /></div>
+                    <div class="testimonial-item"><img src="trust4.png" alt="Trader Testimonial 4" /></div>
+                    <div class="testimonial-item"><img src="trust5.png" alt="Trader Testimonial 5" /></div>
+                    <div class="testimonial-item"><img src="trust6.png" alt="Trader Testimonial 6" /></div>
+                </div>
+                <p class="coming-soon-note">&#128338; More testimonials coming soon as we onboard more early access users.</p>
+            </div>
+        </section>
 
-    </div>
-  </div>
-</section>
   <!-- Support & Contact Section -->
   <section class="section" id="support">
     <div class="container">
