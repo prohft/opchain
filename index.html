@@ -493,6 +493,163 @@
             font-size: 0.85rem;
             text-align: center;
         }
+    
+        /* Video Embed */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 2.5rem auto 0;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            border: 1px solid rgba(216, 177, 90, 0.3);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+            aspect-ratio: 16/9;
+        }
+        .video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .video-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-top: 3rem;
+        }
+        @media (max-width: 1100px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .pricing-grid { grid-template-columns: 1fr; } }
+        .pricing-card {
+            background: linear-gradient(160deg, rgba(8,11,22,0.95), rgba(5,7,19,0.9));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 56px rgba(0,0,0,0.5);
+        }
+        .pricing-featured {
+            border-color: rgba(216, 177, 90, 0.6);
+            background: linear-gradient(160deg, rgba(20,15,5,0.98), rgba(10,8,2,0.95));
+            box-shadow: 0 0 40px rgba(216,177,90,0.15);
+        }
+        .pricing-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+            color: #0a0800;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.3rem 1rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .pricing-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+        }
+        .pricing-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+        }
+        .pricing-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        .pricing-featured .pricing-price { color: var(--gold-soft); }
+        .pricing-regular {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .pricing-regular s { opacity: 0.6; }
+        .pricing-save {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--green-soft);
+        }
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            flex: 1;
+        }
+        .pricing-btn {
+            margin-top: auto;
+            text-align: center;
+            width: 100%;
+        }
+        .pricing-note {
+            margin-top: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(216,177,90,0.07);
+            border: 1px solid rgba(216,177,90,0.2);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        /* Mid-Page CTA */
+        .mid-cta-section {
+            padding: 3rem 0;
+            background: linear-gradient(135deg, rgba(47,229,100,0.07), rgba(216,177,90,0.07));
+            border-top: 1px solid rgba(47,229,100,0.15);
+            border-bottom: 1px solid rgba(216,177,90,0.15);
+        }
+        .mid-cta-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .mid-cta-text h3 {
+            font-size: var(--section-title-size, 1.5rem);
+            font-weight: 700;
+            margin: 0 0 0.4rem;
+            color: var(--gold-soft);
+        }
+        .mid-cta-text p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .mid-cta-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 700px) {
+            .mid-cta-box { flex-direction: column; text-align: center; }
+            .mid-cta-actions { justify-content: center; }
+        }
 
     /* Social Proof / Telegram CTA */
     .telegram-cta {
@@ -793,7 +950,7 @@
   <section class="hero">
     <div class="container">
       <div class="hero-badge">
-        ✨ Built for Active Intraday Traders
+        ✨ &#10024; Built for Active Intraday Traders &nbsp;&#183;&nbsp; &#128313; 15+ Early Access Traders &nbsp;&#183;&nbsp; &#127756; NSE &bull; MCX &bull; NASDAQ
       </div>
       <h1>Read Option Markets<br/>Like a Pro Trader</h1>
       <p>
@@ -815,7 +972,7 @@
       </div>
 
       <div class="cta-group">
-        <a href="https://www.youtube.com/@OpChainTrade" target="_blank" rel="noopener" class="btn btn-primary">
+        <a href="https://youtu.be/m0QarzuYNhI?si=IrSpPnUtUV5-ZPX-" target="_blank" rel="noopener" class="btn btn-primary">
           <span>Watch Demo on YouTube</span>
           <span>→</span>
         </a>
@@ -826,6 +983,28 @@
       </div>
     </div>
   </section>
+  
+        <!-- Demo Video Section -->
+        <section class="section" id="demo" style="background: rgba(5, 7, 19, 0.8); padding: 4rem 0;">
+            <div class="container">
+                <div class="section-label">Watch It Live</div>
+                <h2 class="section-title">See OpChain in Action</h2>
+                <p class="section-subtitle">Watch how OpChain reads option-chain pressure, highlights scenarios, and helps you make faster intraday decisions — in a real live market session.</p>
+                <div class="video-wrapper">
+                    <iframe
+                        src="https://www.youtube.com/embed/m0QarzuYNhI"
+                        title="OpChain Demo - Options Chain Scenario Dashboard"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-cta">
+                    <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Request Early Access &rarr;</a>
+                    <a href="https://t.me/+gg1BAyQXvwg1ODE1" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Join Free Telegram Channel</a>
+                </div>
+            </div>
+        </section>
 
   <!-- Problem Section -->
   <section class="section" id="problems">
@@ -985,6 +1164,23 @@
       </div>
     </div>
   </section>
+  
+        <!-- Mid-Page CTA -->
+        <section class="mid-cta-section">
+            <div class="container">
+                <div class="mid-cta-box">
+                    <div class="mid-cta-text">
+                        <h3>Ready to read the market like a pro?</h3>
+                        <p>Access is limited to early users only. Lock in promo pricing before it closes.</p>
+                    </div>
+                    <div class="mid-cta-actions">
+                        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Request Early Access &rarr;</a>
+                        <a href="#pricing" class="btn btn-secondary">View Pricing</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
   <!-- Screenshots / Visual Demo -->
         <!-- Scenario Views Section -->
@@ -1029,16 +1225,13 @@
                     <div class="pnl-item"><img src="pnl1.png" alt="P&amp;L Trade Result 1" /></div>
                     <div class="pnl-item"><img src="pnl2.png" alt="P&amp;L Trade Result 2" /></div>
                     <div class="pnl-item"><img src="pnl3.png" alt="P&amp;L Trade Result 3" /></div>
-                    <div class="pnl-item"><img src="pnl4.png" alt="P&amp;L Trade Result 4" /></div>
-                    <div class="pnl-item"><img src="pnl5.png" alt="P&amp;L Trade Result 5" /></div>
-                    <div class="pnl-item"><img src="pnl6.png" alt="P&amp;L Trade Result 6" /></div>
-                </div>
+                    
                 <p class="pnl-disclaimer">&#9888;&#65039; Past performance does not guarantee future results. All trades involve risk. This is shared for transparency and educational purposes only.</p>
             </div>
         </section>
 
         <!-- Testimonials Section -->
-        <section class="section" id="testimonials" style="background: rgba(8, 11, 22, 0.7);">
+        <section class="section" id="testimonials" style="display:none; background: rgba(8, 11, 22, 0.7);">
             <div class="container">
                 <div class="section-label">Community Trust</div>
                 <h2 class="section-title">What Traders Are Saying</h2>
@@ -1128,6 +1321,79 @@
     </div>
   </section>
 
+        <!-- Pricing Section -->
+        <section class="section" id="pricing" style="background: rgba(5, 7, 19, 0.8);">
+            <div class="container">
+                <div class="section-label">Early Access Offer</div>
+                <h2 class="section-title">Simple, Transparent Pricing</h2>
+                <p class="section-subtitle">All plans include full OpChain indicator access, private Telegram signal channel, and setup support. <strong style="color: var(--gold-soft);">Promo prices are live now — will increase once early access closes.</strong></p>
+
+                <div class="pricing-grid">
+                    <!-- Monthly -->
+                    <div class="pricing-card">
+                        <div class="pricing-label">Monthly</div>
+                        <div class="pricing-price">&#8377;2,999<span>/mo</span></div>
+                        <div class="pricing-regular">Regular: <s>&#8377;9,999/mo</s></div>
+                        <div class="pricing-save">Save 70% &#128293;</div>
+                        <ul class="pricing-features">
+                            <li>&#10003; Full OpChain indicator access</li>
+                            <li>&#10003; Private Telegram signals</li>
+                            <li>&#10003; Setup support</li>
+                            <li>&#10003; Monthly renewal flexibility</li>
+                        </ul>
+                        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener noreferrer" class="btn btn-secondary pricing-btn">Get Monthly Access</a>
+                    </div>
+                    <!-- Quarterly -->
+                    <div class="pricing-card">
+                        <div class="pricing-label">Quarterly</div>
+                        <div class="pricing-price">&#8377;7,999<span>/3 mo</span></div>
+                        <div class="pricing-regular">Regular: <s>&#8377;29,997</s></div>
+                        <div class="pricing-save">Save 73% &#128293;</div>
+                        <ul class="pricing-features">
+                            <li>&#10003; Full OpChain indicator access</li>
+                            <li>&#10003; Private Telegram signals</li>
+                            <li>&#10003; Priority setup support</li>
+                            <li>&#10003; &#8377;2,666/mo effective rate</li>
+                        </ul>
+                        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener noreferrer" class="btn btn-secondary pricing-btn">Get Quarterly Access</a>
+                    </div>
+                    <!-- Half-Yearly BEST VALUE -->
+                    <div class="pricing-card pricing-featured">
+                        <div class="pricing-badge">&#11088; Best Value</div>
+                        <div class="pricing-label">Half-Yearly</div>
+                        <div class="pricing-price">&#8377;14,999<span>/6 mo</span></div>
+                        <div class="pricing-regular">Regular: <s>&#8377;59,994</s></div>
+                        <div class="pricing-save">Save 75% &#128293;</div>
+                        <ul class="pricing-features">
+                            <li>&#10003; Full OpChain indicator access</li>
+                            <li>&#10003; Private Telegram signals</li>
+                            <li>&#10003; Priority setup support</li>
+                            <li>&#10003; &#8377;2,499/mo effective rate</li>
+                            <li>&#10003; Referral program access</li>
+                        </ul>
+                        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener noreferrer" class="btn btn-primary pricing-btn">Get Best Value &rarr;</a>
+                    </div>
+                    <!-- Yearly -->
+                    <div class="pricing-card">
+                        <div class="pricing-label">Yearly</div>
+                        <div class="pricing-price">&#8377;24,999<span>/yr</span></div>
+                        <div class="pricing-regular">Regular: <s>&#8377;1,19,988</s></div>
+                        <div class="pricing-save">Save 79% &#128293;</div>
+                        <ul class="pricing-features">
+                            <li>&#10003; Full OpChain indicator access</li>
+                            <li>&#10003; Private Telegram signals</li>
+                            <li>&#10003; Priority setup support</li>
+                            <li>&#10003; &#8377;2,083/mo effective rate</li>
+                            <li>&#10003; Referral program access</li>
+                            <li>&#10003; Exclusive yearly member perks</li>
+                        </ul>
+                        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener noreferrer" class="btn btn-secondary pricing-btn">Get Yearly Access</a>
+                    </div>
+                </div>
+                <p class="pricing-note">&#128274; Early access pricing will increase once the initial batch closes. Lock in your rate now. Pricing discussed and confirmed via Telegram before payment.</p>
+            </div>
+        </section>
+
   <!-- Referral / Influencer Program -->
   <section class="section" id="referral" style="background: rgba(5, 7, 19, 0.6);">
     <div class="container">
@@ -1141,7 +1407,7 @@
         <div class="referral-benefits">
           <div class="benefit-item">
             <h4>🤝 Generous Commission</h4>
-            <p>Earn competitive referral fees for every successful subscription.</p>
+            <p>Earn up to 40% commission per referral — based on content quality and genuine feedback.</p>
           </div>
           <div class="benefit-item">
             <h4>🎯 Easy Promotion</h4>
@@ -1151,6 +1417,32 @@
             <h4>📊 Real-Time Tracking</h4>
             <p>Track your referrals and earnings through a simple dashboard.</p>
           </div>
+                      <div class="referral-tiers">
+                <h3 class="tiers-title">Commission Tier Structure</h3>
+                <div class="tier-table">
+                    <div class="tier-row tier-header">
+                        <span>Partner Level</span>
+                        <span>Commission</span>
+                        <span>Requirement</span>
+                    </div>
+                    <div class="tier-row">
+                        <span>&#127775; Basic Partner</span>
+                        <span class="tier-rate">20%</span>
+                        <span>Referral link sharing</span>
+                    </div>
+                    <div class="tier-row">
+                        <span>&#128293; Active Partner</span>
+                        <span class="tier-rate">30%</span>
+                        <span>Regular content + genuine feedback</span>
+                    </div>
+                    <div class="tier-row tier-featured">
+                        <span>&#129351; Elite Partner</span>
+                        <span class="tier-rate gold">40%</span>
+                        <span>Quality promo content + active audience</span>
+                    </div>
+                </div>
+                <p class="tier-note">Commission is subject to subscription confirmation. Tier upgrades are reviewed monthly based on content quality and referral volume.</p>
+            </div>
         </div>
         <a href="https://t.me/Prohft" target="_blank" rel="noopener" class="btn btn-secondary" style="margin-top: 2rem; display: inline-flex;">
           Contact Us on Telegram
@@ -1228,7 +1520,7 @@
           No hype. Just a practical tool for faster, more structured market reading.
         </p>
         <div class="cta-group">
-          <a href="https://www.youtube.com/@OpChainTrade" target="_blank" rel="noopener" class="btn btn-primary">
+          <a href="https://youtu.be/m0QarzuYNhI?si=IrSpPnUtUV5-ZPX-" target="_blank" rel="noopener" class="btn btn-primary">
             <span>Watch Full Demo</span>
             <span>→</span>
           </a>
@@ -1236,7 +1528,7 @@
         </div>
 
         <div class="social-links">
-          <a href="https://www.youtube.com/@OpChainTrade" target="_blank" rel="noopener" class="social-link">
+          <a href="https://youtu.be/m0QarzuYNhI?si=IrSpPnUtUV5-ZPX-" target="_blank" rel="noopener" class="social-link">
             <span>📺</span>
             <span>YouTube</span>
           </a>
@@ -1247,7 +1539,10 @@
           <a href="https://x.com/Prohft" target="_blank" rel="noopener" class="social-link">
             <span>𝕏</span>
             <span>Twitter/X</span>
-          </a>
+ <a href="#faq">FAQ</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#scenarios">Demo</a>
+                    <a href="#pnl">P&amp;L Proof</a>         </a>
           <a href="mailto:prohftech@gmail.com" class="social-link">
             <span>📧</span>
             <span>Email</span>
