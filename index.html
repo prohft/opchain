@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpChain · Black–Gold–Green 16:9 Deck</title>
+  <style>
+    :root {
+      --bg: #020309;
+      --bg-panel: #050713;
+      --bg-panel-soft: #080b16;
+      --gold: #d8b15a;
+      --gold-soft: #f3de9c;
+      --green: #2fe564;
+      --green-soft: #63f49a;
+      --text-main: #f7f5f0;
+      --text-soft: #d1cdc0;
+      --text-muted: #9a9586;
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .deck {
+      position: relative;
+      width: min(100vw, 1920px);
+      aspect-ratio: 16 / 9;
+      border-radius: 32px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(99, 247, 150, 0.26), transparent 55%),
+        radial-gradient(circle at 88% 100%, rgba(237, 201, 112, 0.5), transparent 60%),
+        linear-gradient(145deg, #020309, #050713);
+      box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9);
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .frame {
+      width: calc(100% - 96px);
+      height: calc(100% - 80px);
+      margin: 40px 48px;
+      border-radius: 28px;
+      background: radial-gradient(circle at 0 0, rgba(99, 247, 150, 0.16), transparent 50%),
+                  radial-gradient(circle at 100% 100%, rgba(243, 222, 156, 0.16), transparent 52%),
+                  linear-gradient(135deg, #050713, #020309);
+      border: 1px solid rgba(216, 177, 90, 0.55);
+      padding: 32px 46px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.85);
+    }
+    .label {
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    h1, h2, h3 { margin: 0; letter-spacing: -0.03em; }
+    h1 { font-size: 46px; }
+    h2 { font-size: 34px; }
+    p { margin: 0; }
+    .hero-grid {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 44px;
+      align-items: center;
+    }
+    .badge-row {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(47, 229, 100, 0.6);
+      background: rgba(3, 19, 10, 0.9);
+      font-size: 11px;
+      color: var(--green-soft);
+    }
+    .card-main {
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at 0 0, rgba(99, 247, 150, 0.24), transparent 56%),
+                  radial-gradient(circle at 100% 100%, rgba(243, 222, 156, 0.26), transparent 60%),
+                  linear-gradient(135deg, #050713, #020309);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 22px 22px 18px;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.9);
+      font-size: 13px;
+    }
+    .scenario-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(3, 28, 13, 0.96);
+      border: 1px solid rgba(111, 255, 170, 0.6);
+      color: var(--green-soft);
+      font-size: 11px;
+    }
+    .dot-green {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(47, 229, 100, 0.9);
+    }
+    .scenario-header {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .scenario-title { font-size: 18px; font-weight: 600; }
+    .scenario-strength { text-align: right; }
+    .scenario-strength-value { font-size: 26px; font-weight: 700; color: var(--gold-soft); }
+    .scenario-strength-label { font-size: 11px; color: var(--text-muted); }
+    .bar {
+      margin-top: 4px;
+      width: 150px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      overflow: hidden;
+    }
+    .bar-inner {
+      width: 82%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--gold-soft));
+    }
+    .mini-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .mini-header { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); }
+    .mini-box { background: rgba(3,7,20,0.92); border-radius: 14px; padding: 6px 7px; border: 1px solid rgba(255,255,255,0.08); }
+    .strategy-row {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .strategy-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(10, 30, 17, 0.96);
+      border: 1px solid rgba(111, 255, 170, 0.6);
+      color: var(--green-soft);
+      font-size: 11px;
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 5%, #fff, var(--gold));
+      box-shadow: 0 0 24px rgba(216,177,90,0.9);
+      display:flex;align-items:center;justify-content:center;
+      color:#000;font-weight:700;font-size:14px;
+    }
+    .footer-line {
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:10px;color:var(--text-muted);margin-top:10px;
+    }
+    .two-col {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+      gap: 32px;
+    }
+    .card {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, var(--bg-panel), var(--bg-panel-soft));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 18px 18px 14px;
+      font-size: 13px;
+      color: var(--text-soft);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.75);
+    }
+    .chip {
+      display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;
+      background:rgba(3,19,10,0.92);border:1px solid rgba(47,229,100,0.65);
+      color:var(--green-soft);font-size:10px;
+    }
+    .card-title { margin-top: 8px; font-size: 17px; font-weight: 600; color: var(--text-main); }
+    .bullet { margin-top: 6px; }
+    .bottom-meta { display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text-muted);margin-top:10px; }
+    .nav {
+      position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+      display:flex;align-items:center;gap:10px;
+      padding:5px 13px;border-radius:999px;
+      background:rgba(2,3,12,0.96);border:1px solid rgba(216,177,90,0.7);
+      font-size:11px;color:var(--text-soft);
+    }
+    .nav-btn {width:24px;height:24px;border-radius:999px;border:none;background:rgba(5,9,22,0.96);color:var(--gold-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .dots {display:flex;gap:6px;}
+    .dot {width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,0.18);cursor:pointer;}
+    .dot.active {background:var(--green);box-shadow:0 0 12px rgba(47,229,100,0.9);}
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <!-- Slide 1: Overview -->
+    <section class="slide active" data-id="1">
+      <div class="frame">
+        <div>
+          <div class="label">OpChain · Options-Chain Scenario Engine</div>
+          <div style="margin-top:14px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start;">
+            <div>
+              <h1>Read structure.<br/>Trade with context.</h1>
+              <p style="margin-top:16px;font-size:16px;line-height:1.6;color:var(--text-soft);max-width:520px;">OpChain converts noisy option-chain behaviour into clean scenarios like Strong Buy, Neutral or Strong Sell with a strength score and strategy hint – in one 16:9-ready dashboard.</p>
+              <div class="badge-row">
+                <div class="badge">Black · Gold · Green premium theme</div>
+                <div class="badge">Intraday & short-term traders</div>
+                <div class="badge">TradingView & video friendly</div>
+              </div>
+            </div>
+            <div class="card-main">
+              <div class="scenario-pill"><span class="dot-green"></span>Live scenario snapshot</div>
+              <div class="scenario-header">
+                <div>
+                  <div class="scenario-title">Strong Buy · Futures aligned</div>
+                  <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">Spot, futures & strikes favour bullish continuation.</div>
+                </div>
+                <div class="scenario-strength">
+                  <div class="scenario-strength-value">82%</div>
+                  <div class="scenario-strength-label">Structure strength</div>
+                  <div class="bar"><div class="bar-inner"></div></div>
+                </div>
+              </div>
+              <div class="mini-grid" style="margin-top:16px;">
+                <div class="mini-box">
+                  <div class="mini-header">Calls</div>
+                  <div style="margin-top:4px;">10 / 11 strikes</div>
+                  <div style="margin-top:2px;color:var(--green-soft);">45% green</div>
+                </div>
+                <div class="mini-box">
+                  <div class="mini-header">Puts</div>
+                  <div style="margin-top:4px;">8 / 11 strikes</div>
+                  <div style="margin-top:2px;color:#ffb3b3;">36% red</div>
+                </div>
+                <div class="mini-box">
+                  <div class="mini-header">Scenario</div>
+                  <div style="margin-top:4px;">Strong Buy</div>
+                  <div style="margin-top:2px;color:var(--gold-soft);">SB · 82%</div>
+                </div>
+                <div class="mini-box">
+                  <div class="mini-header">Time</div>
+                  <div style="margin-top:4px;">Fresh CE / PE stamps</div>
+                  <div style="margin-top:2px;">Last change: recent</div>
+                </div>
+              </div>
+              <div class="strategy-row">
+                <div class="strategy-pill"><span style="width:12px;height:12px;border-radius:999px;border:2px solid var(--green-soft);"></span>Strategy hint: Bull Call Spread</div>
+                <div>Hints are contextual, not advice.</div>
+              </div>
+              <div class="footer-line">
+                <div style="display:flex;align-items:center;gap:8px;"><div class="logo-mark">O</div><span>OpChain · Options-Chain Dashboard</span></div>
+                <div>16:9 slide · ready for PowerPoint / Keynote / video</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="bottom-meta"><span>Use this slide as your hero frame for YouTube and sales.</span><span>Slide 1 · Overview</span></div>
+      </div>
+    </section>
+
+    <!-- Slide 2: What it solves -->
+    <section class="slide" data-id="2">
+      <div class="frame">
+        <div>
+          <div class="label">What OpChain solves</div>
+          <h2 style="margin-top:10px;">From scattered options data to one glance.</h2>
+          <div class="two-col">
+            <div class="card">
+              <div class="chip">Decision-support</div>
+              <div class="card-title">One place to read structure</div>
+              <div class="bullet">• Combines call/put behaviour, spot and futures into a single scenario row with a strength percentage.</div>
+              <div class="bullet">• Removes the need to flip between separate option chains, futures charts and watchlists during fast moves.</div>
+              <div class="bullet">• Keeps the internal logic private – only scenario, strength and hints are exposed.</div>
+            </div>
+            <div class="card">
+              <div class="chip">Execution & discipline</div>
+              <div class="card-title">Trade the plan, not the noise</div>
+              <div class="bullet">• Highlights high-alignment states (Strong Buy / Strong Sell) versus mixed or neutral conditions.</div>
+              <div class="bullet">• Shows transitions like Neutral Buy / Neutral Sell that matter for partial exits and scaling in.</div>
+              <div class="bullet">• Encourages rule-based decisions instead of impulsive entries on isolated candles.</div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="bottom-meta"><span>Designed as a confirmation layer on top of your analysis.</span><span>Slide 2 · Problem → Solution</span></div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Scenario framework -->
+    <section class="slide" data-id="3">
+      <div class="frame">
+        <div>
+          <div class="label">Scenario language</div>
+          <h2 style="margin-top:10px;">A quick vocabulary for market conditions.</h2>
+          <div class="two-col">
+            <div class="card">
+              <div class="chip">Bullish & transition</div>
+              <div class="card-title">Strong Buy · Buy · Neutral Buy</div>
+              <div class="bullet">• Strong Buy: broad call/put + spot/futures alignment favouring upside continuation.</div>
+              <div class="bullet">• Buy: bullish bias with slightly less alignment – good for intraday continuation and scaling.</div>
+              <div class="bullet">• Neutral Buy: improvement from bearish or neutral structure, often an early sign to watch for long setups.</div>
+            </div>
+            <div class="card">
+              <div class="chip">Neutral & bearish</div>
+              <div class="card-title">Neutral · Neutral Sell · Sell · Strong Sell</div>
+              <div class="bullet">• Neutral: balanced or mixed; better for reduced size or range-based structures.</div>
+              <div class="bullet">• Neutral Sell: pressure shifting bearish – useful for trimming longs and preparing shorts.</div>
+              <div class="bullet">• Sell / Strong Sell: downside alignment building; time to protect long carry or express a defensive bias.</div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="bottom-meta"><span>Scenario labels show structure, not guaranteed direction.</span><span>Slide 3 · Scenario framework</span></div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Timeframes & flips -->
+    <section class="slide" data-id="4">
+      <div class="frame">
+        <div>
+          <div class="label">Practical playbook</div>
+          <h2 style="margin-top:10px;">Timeframes, flips and carry-forward rules.</h2>
+          <div class="two-col">
+            <div class="card">
+              <div class="chip">Session handling</div>
+              <div class="card-title">Choosing timeframe & logic mode</div>
+              <div class="bullet">• 5-minute + Slow mode: default for most sessions – cleaner structure and easier for beginners.</div>
+              <div class="bullet">• 1-minute: use during big gap opens or fast volatility spikes to see how scenarios rebuild.</div>
+              <div class="bullet">• Fast mode: helpful in choppy markets, but requires tighter risk management because of added noise.</div>
+              <div class="bullet">• Keep higher timeframes (15m / 1h) in mind for context; OpChain works on the execution timeframe.</div>
+            </div>
+            <div class="card">
+              <div class="chip">Carry-forward behaviour</div>
+              <div class="card-title">Previous day vs next day</div>
+              <div class="bullet">• Gradual flips from Strong Sell → Sell → Neutral → Buy → Strong Buy into the close often support next-day buying, even after modest gap-downs, if the environment is stable.</div>
+              <div class="bullet">• Sudden flips (e.g., Strong Sell close → gap-up open) demand caution – intraday upside may be tradable, but overnight bullish carry is more fragile.</div>
+              <div class="bullet">• Treat such sudden changes as potential traps unless structure later rebuilds gradually in the new direction.</div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="bottom-meta"><span>Let scenario transitions guide aggression, not just entries.</span><span>Slide 4 · Timeframes & flips</span></div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Position sizing & confirmation -->
+    <section class="slide" data-id="5">
+      <div class="frame">
+        <div>
+          <div class="label">Risk & position sizing</div>
+          <h2 style="margin-top:10px;">Let size follow scenario quality.</h2>
+          <div class="two-col">
+            <div class="card">
+              <div class="chip">Sizing logic</div>
+              <div class="card-title">Adjust exposure with structure</div>
+              <div class="bullet">• During corrections with Strong Sell / Sell, focus on protecting capital and expressing cautious shorts.</div>
+              <div class="bullet">• When structure improves to Neutral then Neutral Buy, close shorts and begin building long exposure gradually.</div>
+              <div class="bullet">• Increase size only when scenarios advance to Buy or Strong Buy and price action supports the move.</div>
+              <div class="bullet">• Avoid max size in mixed or rapidly flipping conditions; keep trades smaller and shorter.</div>
+            </div>
+            <div class="card">
+              <div class="chip">Confirmation layer</div>
+              <div class="card-title">OpChain + your own analysis</div>
+              <div class="bullet">• Start with your existing process: price action, liquidity zones, higher timeframe trend and event calendar.</div>
+              <div class="bullet">• Use OpChain to confirm or challenge your idea – alignment should raise conviction, conflict should slow you down.</div>
+              <div class="bullet">• Keep a journal: note which scenario transitions work best on your symbols and when to ignore weaker readings.</div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="bottom-meta"><span>OpChain supports your edge – it does not replace it.</span><span>Slide 5 · Sizing & confirmation</span></div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Product & content uses -->
+    <section class="slide" data-id="6">
+      <div class="frame">
+        <div>
+          <div class="label">Product & content</div>
+          <h2 style="margin-top:10px;">How OpChain fits into your trading business.</h2>
+          <div class="two-col">
+            <div class="card">
+              <div class="chip">For traders</div>
+              <div class="card-title">Daily execution companion</div>
+              <div class="bullet">• Run OpChain on TradingView alongside your favourite indicators or clean price charts.</div>
+              <div class="bullet">• Use scenarios to filter trades, manage exits and avoid overtrading when structure is mixed.</div>
+              <div class="bullet">• Apply across indices, stock options and selected US names with the same workflow.</div>
+            </div>
+            <div class="card">
+              <div class="chip">For your brand</div>
+              <div class="card-title">Premium OpChain storyline</div>
+              <div class="bullet">• This deck becomes your visual narrative for YouTube videos, X threads, Telegram posts and sales calls.</div>
+              <div class="bullet">• Black–Gold–Green theme matches a wealth / growth identity and your tree logo style.</div>
+              <div class="bullet">• Core logic stays private while traders see clear structure, rules and risk notes.</div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="bottom-meta"><span>One visual story you can reuse everywhere.</span><span>Slide 6 · Use cases</span></div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Closing CTA -->
+    <section class="slide" data-id="7">
+      <div class="frame">
+        <div>
+          <div class="label">Closing frame</div>
+          <h2 style="margin-top:10px;">Black · Gold · Green — the OpChain signature look.</h2>
+          <div class="hero-grid" style="margin-top:24px;grid-template-columns:minmax(0,0.95fr) minmax(0,1.05fr);">
+            <div>
+              <p style="font-size:16px;line-height:1.7;color:var(--text-soft);max-width:520px;">Use this deck as your premium, 16:9-ready OpChain story: record it into a YouTube walkthrough, present it live on calls, or slice each slide into posts across X, Telegram and your website.</p>
+              <p style="margin-top:14px;font-size:16px;line-height:1.7;color:var(--text-soft);">All the focus stays where it should be: structure, discipline and practical trading rules – while the proprietary signal engine remains protected inside your code.</p>
+            </div>
+            <div class="card-main" style="padding:20px 20px 16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div class="scenario-pill"><span class="dot-green"></span>OpChain · Launch-ready deck</div>
+                <div style="font-size:10px;color:var(--text-muted);">16:9 · Full HD friendly</div>
+              </div>
+              <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-size:13px;color:var(--text-soft);">
+                <div>
+                  <div style="font-size:22px;font-weight:700;color:var(--gold-soft);">01</div>
+                  <div style="margin-top:6px;">Scenario engine explained in trader language.</div>
+                </div>
+                <div>
+                  <div style="font-size:22px;font-weight:700;color:var(--gold-soft);">02</div>
+                  <div style="margin-top:6px;">Slides double as YouTube frames & promo visuals.</div>
+                </div>
+                <div>
+                  <div style="font-size:22px;font-weight:700;color:var(--gold-soft);">03</div>
+                  <div style="margin-top:6px;">Matches your black–gold–green brand identity.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="bottom-meta"><span>Next step: export these slides to PPTX / Keynote or record as video.</span><span>Slide 7 · Call-to-action</span></div>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <div class="nav">
+      <button class="nav-btn" data-dir="-1">&#8249;</button>
+      <div class="dots"></div>
+      <button class="nav-btn" data-dir="1">&#8250;</button>
+      <span style="margin-left:6px;">Arrow keys / click to navigate</span>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dotsBox = document.querySelector('.dots');
+    let index = 0;
+    slides.forEach((s, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => show(i);
+      dotsBox.appendChild(d);
+    });
+    function show(i) {
+      slides[index].classList.remove('active');
+      dotsBox.children[index].classList.remove('active');
+      index = (i + slides.length) % slides.length;
+      slides[index].classList.add('active');
+      dotsBox.children[index].classList.add('active');
+    }
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.onclick = () => {
+        const dir = Number(btn.dataset.dir);
+        show(index + dir);
+      };
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(index + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
+    });
+  </script>
+</body>
+</html>
