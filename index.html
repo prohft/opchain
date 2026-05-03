@@ -494,6 +494,95 @@
             text-align: center;
         }
     
+        /* Early Launch / Testimonials Section */
+        .early-launch-banner {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background: linear-gradient(135deg, rgba(216, 177, 90, 0.1), rgba(47, 229, 100, 0.06));
+            border: 1px solid rgba(216, 177, 90, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 2rem 2.25rem;
+            margin-top: 3rem;
+        }
+        .elb-icon {
+            flex-shrink: 0;
+            font-size: 2rem;
+            margin-top: 0.2rem;
+        }
+        .elb-body h3 {
+            font-size: 1.25rem;
+            color: var(--gold-soft);
+            margin-bottom: 0.75rem;
+        }
+        .elb-body p {
+            color: var(--text-soft);
+            line-height: 1.75;
+            font-size: 0.975rem;
+        }
+        .early-benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+        .early-benefit-item {
+            background: var(--bg-panel);
+            border: 1px solid rgba(47, 229, 100, 0.18);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .early-benefit-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            border-color: rgba(47, 229, 100, 0.4);
+        }
+        .ebi-icon {
+            font-size: 1.75rem;
+            margin-bottom: 0.85rem;
+        }
+        .early-benefit-item h4 {
+            font-size: 1.1rem;
+            color: var(--green-soft);
+            margin-bottom: 0.5rem;
+        }
+        .early-benefit-item p {
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            line-height: 1.7;
+        }
+        .testimonials-placeholder-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+            padding: 1.5rem 2rem;
+            background: rgba(47, 229, 100, 0.05);
+            border: 1px dashed rgba(47, 229, 100, 0.3);
+            border-radius: var(--radius-lg);
+        }
+        .tpn-icon {
+            flex-shrink: 0;
+            font-size: 1.75rem;
+        }
+        .testimonials-placeholder-note strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+        }
+        .testimonials-placeholder-note p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        @media (max-width: 768px) {
+            .early-launch-banner { flex-direction: column; gap: 1rem; }
+            .early-benefits-grid { grid-template-columns: 1fr; }
+            .testimonials-placeholder-note { flex-direction: column; gap: 0.75rem; }
+        }
+    
         /* Video Embed */
         .video-wrapper {
             position: relative;
@@ -1230,22 +1319,58 @@
             </div>
         </section>
 
-        <!-- Testimonials Section -->
-        <section class="section" id="testimonials" style="display:none; background: rgba(8, 11, 22, 0.7);">
-            <div class="container">
-                <div class="section-label">Community Trust</div>
-                <h2 class="section-title">What Traders Are Saying</h2>
-                <p class="section-subtitle">Feedback from early access users who have been using OpChain in live intraday sessions.</p>
-                <div class="testimonials-grid">
-                    <div class="testimonial-item"><img src="trust1.png" alt="Trader Testimonial 1" /></div>
-                    <div class="testimonial-item"><img src="trust2.png" alt="Trader Testimonial 2" /></div>
-                    <div class="testimonial-item"><img src="trust3.png" alt="Trader Testimonial 3" /></div>
-                    <div class="testimonial-item"><img src="trust4.png" alt="Trader Testimonial 4" /></div>
-                    <div class="testimonial-item"><img src="trust5.png" alt="Trader Testimonial 5" /></div>
-                    <div class="testimonial-item"><img src="trust6.png" alt="Trader Testimonial 6" /></div>
-                </div>
-                <p class="coming-soon-note">&#128338; More testimonials coming soon as we onboard more early access users.</p>
+<!-- Testimonials Section -->
+        <section class="section" id="testimonials">
+          <div class="container">
+            <div class="section-label">Community Trust</div>
+            <h2 class="section-title">What Traders Are Saying</h2>
+            <p class="section-subtitle">OpChain was built after years of live market testing — and the feedback from our early access traders reflects that.</p>
+
+            <!-- Early Launch Transparency Banner -->
+            <div class="early-launch-banner">
+              <div class="elb-icon">🛠️</div>
+              <div class="elb-body">
+                <h3>A Note from the Builder</h3>
+                <p>OpChain has just launched after years of live market testing and refinement. I've blown multiple trading accounts learning these lessons the hard way — and this tool was built to solve the exact problems I faced as an active intraday trader.</p>
+                <p style="margin-top: 0.75rem;">We currently have <strong>15+ early access traders</strong> using it in real market conditions across <strong>NSE, BSE, MCX &amp; NASDAQ</strong>. We're prioritizing real results over marketing hype.</p>
+              </div>
             </div>
+
+            <!-- What This Means For You -->
+            <div class="early-benefits-grid">
+              <div class="early-benefit-item">
+                <div class="ebi-icon">💰</div>
+                <h4>Transparent Pricing</h4>
+                <p>Significant early-access discounts that won't last. You're getting in at founder pricing before we scale.</p>
+              </div>
+              <div class="early-benefit-item">
+                <div class="ebi-icon">🎯</div>
+                <h4>Direct Priority Support</h4>
+                <p>You get direct access to me — not a support bot. Every question answered personally via Telegram.</p>
+              </div>
+              <div class="early-benefit-item">
+                <div class="ebi-icon">🔄</div>
+                <h4>Shape Future Updates</h4>
+                <p>Your feedback directly influences what gets built next. Early members have a real voice in the product roadmap.</p>
+              </div>
+              <div class="early-benefit-item">
+                <div class="ebi-icon">♾️</div>
+                <h4>Lifetime Updates</h4>
+                <p>Early members get all future updates included. As OpChain evolves, you grow with it — no extra charges.</p>
+              </div>
+            </div>
+
+            <!-- Placeholder testimonial cards (real ones incoming) -->
+            <div class="testimonials-placeholder-note">
+              <span class="tpn-icon">📸</span>
+              <div>
+                <strong>Real user testimonials will be added as they come in.</strong>
+                <p>In the meantime, you can judge the tool by the live examples, workflow, and my own trade results shown on this page. Transparency is the foundation this product is built on.</p>
+              </div>
+            </div>
+
+            <div class="coming-soon-note">🕒 More testimonials being collected — check back soon as we onboard more early access traders.</div>
+          </div>
         </section>
 
   <!-- Support & Contact Section -->
