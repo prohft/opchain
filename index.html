@@ -943,7 +943,7 @@
     }
 
     /* Footer */
-    .site-footer {
+    .coming-soon-section { padding: 4rem 0; background: linear-gradient(135deg, rgba(5,7,19,0.95) 0%, rgba(8,12,30,0.98) 100%); border-top: 1px solid rgba(216,177,90,0.15); border-bottom: 1px solid rgba(216,177,90,0.15); }         .coming-soon-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem; }         .coming-soon-title { font-size: clamp(1.4rem, 2.5vw, 1.9rem); font-weight: 800; color: var(--text-main); margin-bottom: 0.6rem; }         .coming-soon-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2.5rem; }         .coming-soon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }         .cs-card { background: rgba(216,177,90,0.05); border: 1px solid rgba(216,177,90,0.18); border-radius: var(--radius-md); padding: 1rem 1.2rem; text-align: left; }         .cs-card-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); background: rgba(216,177,90,0.1); border-radius: 4px; padding: 2px 7px; display: inline-block; margin-bottom: 0.5rem; }         .cs-card h4 { font-size: 0.88rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.3rem; line-height: 1.35; }         .cs-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }         .cs-loyalty { margin: 0 auto 2rem; max-width: 560px; background: rgba(47,229,100,0.06); border: 1px solid rgba(47,229,100,0.2); border-radius: var(--radius-md); padding: 0.9rem 1.4rem; font-size: 0.85rem; color: var(--text-soft); }         .cs-loyalty strong { color: var(--green); }         .site-footer {
       border-top: 1px solid rgba(216, 177, 90, 0.2);
       padding: 3rem 0 2rem;
       text-align: center;
@@ -1724,7 +1724,46 @@ Add About/Origin Story section with CSS — answers the common objection    </di
   <footer class="site-footer">
     <div class="container">
       <div class="footer-links">
-                <a href="#faq">FAQ</a>
+              <!-- Coming Soon Section -->
+      <section class="coming-soon-section">
+        <div class="container" style="text-align:center;">
+          <div class="coming-soon-label">What&rsquo;s Next</div>
+          <h2 class="coming-soon-title">More Premium Indicators in the Pipeline</h2>
+          <p class="coming-soon-sub">Each one battle-tested across market conditions and asset classes. Releasing one by one &mdash; no rush, no hype.</p>
+          <div class="coming-soon-grid">
+            <div class="cs-card">
+              <span class="cs-card-badge">Coming Soon</span>
+              <h4>Institutional OB/OS Trigger</h4>
+              <p>3-layer confluence logic to pinpoint exact overbought &amp; oversold reversal zones.</p>
+            </div>
+            <div class="cs-card">
+              <span class="cs-card-badge">Coming Soon</span>
+              <h4>Accumulation / Distribution Engine</h4>
+              <p>7-confirmation majority activity filter &mdash; know when smart money is silently building or exiting.</p>
+            </div>
+            <div class="cs-card">
+              <span class="cs-card-badge">Coming Soon</span>
+              <h4>Price Action + Delta Score</h4>
+              <p>Proven calculation matrix to detect buy/sell-side liquidity and predict the next major move.</p>
+            </div>
+            <div class="cs-card">
+              <span class="cs-card-badge">Coming Soon</span>
+              <h4>Volume-Context Breakout Scanner</h4>
+              <p>Breakout, breakdown &amp; divergence signals grounded in pure volume &mdash; no lagging indicators.</p>
+            </div>
+            <div class="cs-card">
+              <span class="cs-card-badge">Coming Soon</span>
+              <h4>Multi-Symbol Indicator Scanner</h4>
+              <p>Scan across symbols simultaneously to surface high-probability trade ideas faster.</p>
+            </div>
+          </div>
+          <div class="cs-loyalty">
+            &#127381; <strong>Existing OpChain subscribers get automatic early-access discounts</strong> on every new launch &mdash; no action needed. Your subscription locks in the loyalty benefit.
+          </div>
+          <a href="https://t.me/+gg1BAyQXvwg1ODE1" target="_blank" rel="noopener" class="btn btn-secondary">Join Telegram for Launch Updates <span>&rarr;</span></a>
+        </div>
+      </section>        
+        <a href="#faq">FAQ</a>
         <a href="#pricing">Pricing</a>
         <a href="#scenarios">Demo</a>
         <a href="#pnl">P&amp;L Proof</a>
