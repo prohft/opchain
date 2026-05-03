@@ -416,7 +416,7 @@
       display: block;
     }
     
-        .settings-gallery .screenshot-item img { height: 220px; object-fit: cover; } /* Settings Gallery */         .settings-gallery {           display: flex;           gap: 1rem;           overflow-x: auto;           scroll-snap-type: x mandatory;           -webkit-overflow-scrolling: touch;           padding-bottom: 1rem;           margin-top: 2rem;         }         .settings-gallery::-webkit-scrollbar {           height: 6px;         }         .settings-gallery::-webkit-scrollbar-track {           background: rgba(255,255,255,0.05);           border-radius: 4px;         }         .settings-gallery::-webkit-scrollbar-thumb {           background: rgba(216,177,90,0.4);           border-radius: 4px;         }         .settings-gallery .screenshot-item {           flex: 0 0 320px;           scroll-snap-align: start; }         }         @media (max-width: 768px) {           .settings-gallery .screenshot-item { flex: 0 0 260px; }         }          /* P&L Proof Grid */
+        /* Settings Gallery */         .settings-gallery {           display: flex;           gap: 1rem;           overflow-x: auto;           scroll-snap-type: x mandatory;           -webkit-overflow-scrolling: touch;           padding-bottom: 1rem;           margin-top: 2rem;         }         .settings-gallery::-webkit-scrollbar {           height: 6px;         }         .settings-gallery::-webkit-scrollbar-track {           background: rgba(255,255,255,0.05);           border-radius: 4px;         }         .settings-gallery::-webkit-scrollbar-thumb {           background: rgba(216,177,90,0.4);           border-radius: 4px;         }         .settings-gallery .screenshot-item {           flex: 0 0 320px;           scroll-snap-align: start;         }         @media (max-width: 768px) {           .settings-gallery .screenshot-item { flex: 0 0 260px; }         }          /* P&L Proof Grid */
         .pnl-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1057,7 +1057,7 @@
       <h1>Read Option Markets<br/>Like a Pro Trader</h1>
       <p>
         OpChain transforms complex option chain data into clear, actionable scenarios. 
-        Get directional bias, strike-side pressure, and spot-futures alignment in one compact dashboard.         </p>         <p style="font-size:0.8rem; color:var(--text-muted); margin:0.5rem auto 2rem; max-width:800px; line-height:1.5;">📍 India-first: Nifty50, Banknifty, Sensex, Midcap, Stocks &bull; MCX (CrudeOil, NaturalGas, Gold, Silver, Copper) &bull; US &amp; Global Options (NASDAQ, OPRA) &bull; Crypto options <em style="opacity:0.75;">(subject to TradingView data)</em>         </p>
+        Get directional bias, strike-side pressure, and spot-futures alignment in one compact dashboard.         </p>         <p style="font-size:0.8rem; color:var(--text-muted); margin:0.5rem auto 2rem; max-width:800px; line-height:1.5;">📍 India-first: Nifty 50, Bank Nifty, Sensex, Midcap &bull; MCX (Crude Oil, Gold, Silver, Copper) &bull; US &amp; Global Options (NASDAQ, OPRA) &bull; Crypto options <em style="opacity:0.75;">(subject to TradingView data)</em>         </p>
       </p>
 
       <!-- Exclusivity Notice -->
@@ -1075,7 +1075,7 @@
 
       <div class="cta-group">
         <a href="https://www.youtube.com/@OpChainTrade" target="_blank" rel="noopener" class="btn btn-primary">
-          <span>Watch on YouTube</span>
+          <span>YouTube Channel</span>
           <span>→</span>
         </a>
         <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener" class="btn btn-secondary">Request Early Access</a>
@@ -1312,7 +1312,7 @@
                 <div class="section-label">Live Scenario Views</div>
                 <h2 class="section-title">Scenarios &amp; Strike Table</h2>
                 <p class="section-subtitle">Real OpChain screenshots showing Strong Buy, Neutral, Strong Sell scenarios and strike-wise CE/PE pressure across different market conditions and symbols.</p>
-                <div settings-gallery>
+                <div class="screenshot-grid">
                     <div class="screenshot-item"><img src="scenario-view-1.png" alt="OpChain Strong Buy Scenario" /></div>
                     <div class="screenshot-item"><img src="scenario-view-2.png" alt="OpChain Neutral Scenario View" /></div>
                     <div class="screenshot-item"><img src="scenario-view-3.png" alt="OpChain Strong Sell Scenario" /></div>
