@@ -416,7 +416,7 @@
       display: block;
     }
     
-        /* P&L Proof Grid */
+        /* Settings Gallery */         .settings-gallery {           display: flex;           gap: 1rem;           overflow-x: auto;           scroll-snap-type: x mandatory;           -webkit-overflow-scrolling: touch;           padding-bottom: 1rem;           margin-top: 2rem;         }         .settings-gallery::-webkit-scrollbar {           height: 6px;         }         .settings-gallery::-webkit-scrollbar-track {           background: rgba(255,255,255,0.05);           border-radius: 4px;         }         .settings-gallery::-webkit-scrollbar-thumb {           background: rgba(216,177,90,0.4);           border-radius: 4px;         }         .settings-gallery .screenshot-item {           flex: 0 0 320px;           scroll-snap-align: start;         }         @media (max-width: 768px) {           .settings-gallery .screenshot-item { flex: 0 0 260px; }         }          /* P&L Proof Grid */
         .pnl-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -609,14 +609,14 @@
         }
 
         /* Pricing Section */
-        <!-- About .about-section { padding: 5rem 0; background: linear-gradient(180deg, var(--bg) 0%, rgba(5,7,19,0.6) 100%); }         .about-inner { max-width: 680px; margin: 0 auto; text-align: center; }         .about-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; }         .about-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--text-main); margin-bottom: 2rem; }         .about-body p { font-size: 1rem; line-height: 1.75; color: var(--text-soft); margin-bottom: 1.1rem; }         .about-body strong { color: var(--text-main); }         .about-note { margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(47,229,100,0.06); border-left: 3px solid var(--green); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.92rem !important; color: var(--text-soft); font-style: italic; }         .pricing-grid {-->       <section id="about" class="about-section">         <div class="container">           <div class="about-inner">             <div class="about-label">Behind OpChain</div>             <h2 class="about-title">If It Works, Why Sell It?</h2>             <div class="about-body">               <p>                 I&rsquo;ve traded actively for over 8 years. Like many, I had early wins &mdash; followed by painful blowups, repeated losses, and the heavy stress that comes with it.               </p>               <p>                 Those years forced me to deeply study option chain behaviour, market psychology, and intraday dynamics. OpChain came out of that process &mdash; a tool I built specifically to solve problems that cost me real money and peace of mind.               </p>               <p>                 <strong>I still trade with it every day.</strong> I&rsquo;m now sharing access with a limited number of serious traders &mdash; partly to get it into the hands of people who&rsquo;ll benefit from it, and partly to diversify beyond high-leverage intraday trading toward a calmer, more sustainable approach.               </p>               <p class="about-note">                 This isn&rsquo;t a magic system. It&rsquo;s a practical dashboard built from hard-earned experience &mdash; designed to help you read the market faster and with less noise.               </p>             </div>           </div>         </div>       </section>        <!-- Pricing -->
+        <!-- About .about-section { padding: 5rem 0; background: linear-gradient(180deg, var(--bg) 0%, rgba(5,7,19,0.6) 100%); }         .about-inner { max-width: 680px; margin: 0 auto; text-align: center; }         .about-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; }         .about-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--text-main); margin-bottom: 2rem; }         .about-body p { font-size: 1rem; line-height: 1.75; color: var(--text-soft); margin-bottom: 1.1rem; }         .about-body strong { color: var(--text-main); }         .about-note { margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(47,229,100,0.06); border-left: 3px solid var(--green); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.92rem !important; color: var(--text-soft); font-style: italic; }         .pricing-grid {       <section id="about" class="about-section">         <div class="container">           <div class="about-inner">             <div class="about-label">Behind OpChain</div>             <h2 class="about-title">If It Works, Why Sell It?</h2>             <div class="about-body">               <p>                 I&rsquo;ve traded actively for over 8 years. Like many, I had early wins &mdash; followed by painful blowups, repeated losses, and the heavy stress that comes with it.               </p>               <p>                 Those years forced me to deeply study option chain behaviour, market psychology, and intraday dynamics. OpChain came out of that process &mdash; a tool I built specifically to solve problems that cost me real money and peace of mind.               </p>               <p>                 <strong>I still trade with it every day.</strong> I&rsquo;m now sharing access with a limited number of serious traders &mdash; partly to get it into the hands of people who&rsquo;ll benefit from it, and partly to diversify beyond high-leverage intraday trading toward a calmer, more sustainable approach.               </p>               <p class="about-note">                 This isn&rsquo;t a magic system. It&rsquo;s a practical dashboard built from hard-earned experience &mdash; designed to help you read the market faster and with less noise.               </p>             </div>           </div>         </div>       </section>        <!-- Pricing -->
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1.25rem;
             margin-top: 3rem;
         }
-        @media (max-width: 1100px) { <!-- About .about-section { padding: 5rem 0; background: linear-gradient(180deg, var(--bg) 0%, rgba(5,7,19,0.6) 100%); }         .about-inner { max-width: 680px; margin: 0 auto; text-align: center; }         .about-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; }         .about-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--text-main); margin-bottom: 2rem; }         .about-body p { font-size: 1rem; line-height: 1.75; color: var(--text-soft); margin-bottom: 1.1rem; }         .about-body strong { color: var(--text-main); }         .about-note { margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(47,229,100,0.06); border-left: 3px solid var(--green); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.92rem !important; color: var(--text-soft); font-style: italic; }         .pricing-grid {-->       <section id="about" class="about-section">         <div class="container">           <div class="about-inner">             <div class="about-label">Behind OpChain</div>             <h2 class="about-title">If It Works, Why Sell It?</h2>             <div class="about-body">               <p>                 I&rsquo;ve traded actively for over 8 years. Like many, I had early wins &mdash; followed by painful blowups, repeated losses, and the heavy stress that comes with it.               </p>               <p>                 Those years forced me to deeply study option chain behaviour, market psychology, and intraday dynamics. OpChain came out of that process &mdash; a tool I built specifically to solve problems that cost me real money and peace of mind.               </p>               <p>                 <strong>I still trade with it every day.</strong> I&rsquo;m now sharing access with a limited number of serious traders &mdash; partly to get it into the hands of people who&rsquo;ll benefit from it, and partly to diversify beyond high-leverage intraday trading toward a calmer, more sustainable approach.               </p>               <p class="about-note">                 This isn&rsquo;t a magic system. It&rsquo;s a practical dashboard built from hard-earned experience &mdash; designed to help you read the market faster and with less noise.               </p>             </div>           </div>         </div>       </section>        <!-- Pricing --> grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { <!-- About .about-section { padding: 5rem 0; background: linear-gradient(180deg, var(--bg) 0%, rgba(5,7,19,0.6) 100%); }         .about-inner { max-width: 680px; margin: 0 auto; text-align: center; }         .about-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; }         .about-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--text-main); margin-bottom: 2rem; }         .about-body p { font-size: 1rem; line-height: 1.75; color: var(--text-soft); margin-bottom: 1.1rem; }         .about-body strong { color: var(--text-main); }         .about-note { margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(47,229,100,0.06); border-left: 3px solid var(--green); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.92rem !important; color: var(--text-soft); font-style: italic; }         .pricing-grid {-->       <section id="about" class="about-section">         <div class="container">           <div class="about-inner">             <div class="about-label">Behind OpChain</div>             <h2 class="about-title">If It Works, Why Sell It?</h2>             <div class="about-body">               <p>                 I&rsquo;ve traded actively for over 8 years. Like many, I had early wins &mdash; followed by painful blowups, repeated losses, and the heavy stress that comes with it.               </p>               <p>                 Those years forced me to deeply study option chain behaviour, market psychology, and intraday dynamics. OpChain came out of that process &mdash; a tool I built specifically to solve problems that cost me real money and peace of mind.               </p>               <p>                 <strong>I still trade with it every day.</strong> I&rsquo;m now sharing access with a limited number of serious traders &mdash; partly to get it into the hands of people who&rsquo;ll benefit from it, and partly to diversify beyond high-leverage intraday trading toward a calmer, more sustainable approach.               </p>               <p class="about-note">                 This isn&rsquo;t a magic system. It&rsquo;s a practical dashboard built from hard-earned experience &mdash; designed to help you read the market faster and with less noise.               </p>             </div>           </div>         </div>       </section>        <!-- Pricing --> grid-template-columns: 1fr; } }
+        @media (max-width: 1100px) { <!-- About .about-section { padding: 5rem 0; background: linear-gradient(180deg, var(--bg) 0%, rgba(5,7,19,0.6) 100%); }         .about-inner { max-width: 680px; margin: 0 auto; text-align: center; }         .about-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; }         .about-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--text-main); margin-bottom: 2rem; }         .about-body p { font-size: 1rem; line-height: 1.75; color: var(--text-soft); margin-bottom: 1.1rem; }         .about-body strong { color: var(--text-main); }         .about-note { margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(47,229,100,0.06); border-left: 3px solid var(--green); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.92rem !important; color: var(--text-soft); font-style: italic; }         .pricing-grid {       <section id="about" class="about-section">         <div class="container">           <div class="about-inner">             <div class="about-label">Behind OpChain</div>             <h2 class="about-title">If It Works, Why Sell It?</h2>             <div class="about-body">               <p>                 I&rsquo;ve traded actively for over 8 years. Like many, I had early wins &mdash; followed by painful blowups, repeated losses, and the heavy stress that comes with it.               </p>               <p>                 Those years forced me to deeply study option chain behaviour, market psychology, and intraday dynamics. OpChain came out of that process &mdash; a tool I built specifically to solve problems that cost me real money and peace of mind.               </p>               <p>                 <strong>I still trade with it every day.</strong> I&rsquo;m now sharing access with a limited number of serious traders &mdash; partly to get it into the hands of people who&rsquo;ll benefit from it, and partly to diversify beyond high-leverage intraday trading toward a calmer, more sustainable approach.               </p>               <p class="about-note">                 This isn&rsquo;t a magic system. It&rsquo;s a practical dashboard built from hard-earned experience &mdash; designed to help you read the market faster and with less noise.               </p>             </div>           </div>         </div>       </section>        <!-- Pricing --> grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { <!-- About .about-section { padding: 5rem 0; background: linear-gradient(180deg, var(--bg) 0%, rgba(5,7,19,0.6) 100%); }         .about-inner { max-width: 680px; margin: 0 auto; text-align: center; }         .about-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; }         .about-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: var(--text-main); margin-bottom: 2rem; }         .about-body p { font-size: 1rem; line-height: 1.75; color: var(--text-soft); margin-bottom: 1.1rem; }         .about-body strong { color: var(--text-main); }         .about-note { margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(47,229,100,0.06); border-left: 3px solid var(--green); border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 0.92rem !important; color: var(--text-soft); font-style: italic; }         .pricing-grid {       <section id="about" class="about-section">         <div class="container">           <div class="about-inner">             <div class="about-label">Behind OpChain</div>             <h2 class="about-title">If It Works, Why Sell It?</h2>             <div class="about-body">               <p>                 I&rsquo;ve traded actively for over 8 years. Like many, I had early wins &mdash; followed by painful blowups, repeated losses, and the heavy stress that comes with it.               </p>               <p>                 Those years forced me to deeply study option chain behaviour, market psychology, and intraday dynamics. OpChain came out of that process &mdash; a tool I built specifically to solve problems that cost me real money and peace of mind.               </p>               <p>                 <strong>I still trade with it every day.</strong> I&rsquo;m now sharing access with a limited number of serious traders &mdash; partly to get it into the hands of people who&rsquo;ll benefit from it, and partly to diversify beyond high-leverage intraday trading toward a calmer, more sustainable approach.               </p>               <p class="about-note">                 This isn&rsquo;t a magic system. It&rsquo;s a practical dashboard built from hard-earned experience &mdash; designed to help you read the market faster and with less noise.               </p>             </div>           </div>         </div>       </section>        <!-- Pricing --> grid-template-columns: 1fr; } }
         .pricing-card {
             background: linear-gradient(160deg, rgba(8,11,22,0.95), rgba(5,7,19,0.9));
             border: 1px solid rgba(255,255,255,0.1);
@@ -1040,7 +1040,7 @@
             <li><a href="#how-it-works">How It Works</a></li>
             <li><a href="#support">Support</a></li>
             <li><a href="#referral">Earn Referrals</a></li>
-            <li><a href="#faq">FAQ</a></li>
+            <li><div class="footer-links"><a href="#faq">FAQ</a></li>
           </ul>
           <button class="mobile-menu-toggle" aria-label="Menu">☰</button>
         </nav>
@@ -1074,8 +1074,8 @@
       </div>
 
       <div class="cta-group">
-        <a href="https://youtu.be/m0QarzuYNhI?si=IrSpPnUtUV5-ZPX-" target="_blank" rel="noopener" class="btn btn-primary">
-          <span>Watch Demo on YouTube</span>
+        <a href="https://www.youtube.com/@Prohft" target="_blank" rel="noopener" class="btn btn-primary">
+          <span>YouTube Channel</span>
           <span>→</span>
         </a>
         <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" target="_blank" rel="noopener" class="btn btn-secondary">Request Early Access</a>
@@ -1329,7 +1329,7 @@
                 <div class="section-label">Configuration</div>
                 <h2 class="section-title">Indicator Settings Panel</h2>
                 <p class="section-subtitle">OpChain is fully configurable for your symbol, market mode, strike range, expiry, and display preferences. Set it up once and it adapts to your workflow.</p>
-                <div class="screenshot-grid">
+                <div class="settings-gallery">
                     <div class="screenshot-item"><img src="settings-panel-1.png" alt="General Settings - Trend Logic Mode" /></div>
                     <div class="screenshot-item"><img src="settings-panel-2.png" alt="Symbol Configuration Panel" /></div>
                     <div class="screenshot-item"><img src="settings-panel-3.png" alt="Dynamic Symbol Selection Settings" /></div>
@@ -1476,7 +1476,7 @@
           <span>Join Free Telegram Channel</span>
           <span>→</span>
         </a>
-Add About/Origin Story section with CSS — answers the common objection    </div>
+Join Free Telegram Channel   →</a>    </div>
   </section>
 
       <!-- About / Origin Story -->
@@ -1692,7 +1692,7 @@ Add About/Origin Story section with CSS — answers the common objection    </di
           No hype. Just a practical tool for faster, more structured market reading.
         </p>
         <div class="cta-group">
-          <a href="https://youtu.be/m0QarzuYNhI?si=IrSpPnUtUV5-ZPX-" target="_blank" rel="noopener" class="btn btn-primary">
+          <a href="https://www.youtube.com/@Prohft" target="_blank" rel="noopener" class="btn btn-primary">
             <span>Watch Full Demo</span>
             <span>→</span>
           </a>
@@ -1700,7 +1700,7 @@ Add About/Origin Story section with CSS — answers the common objection    </di
         </div>
 
         <div class="social-links">
-          <a href="https://youtu.be/m0QarzuYNhI?si=IrSpPnUtUV5-ZPX-" target="_blank" rel="noopener" class="social-link">
+          <a href="https://www.youtube.com/@Prohft" target="_blank" rel="noopener" class="social-link">
             <span>📺</span>
             <span>YouTube</span>
           </a>
@@ -1724,7 +1724,7 @@ Add About/Origin Story section with CSS — answers the common objection    </di
   <footer class="site-footer">
     <div class="container">
       <div class="footer-links">
-              <!-- Coming Soon Section -->
+              </div><!-- end footer-links -->         <!-- Coming Soon Section -->
       <section class="coming-soon-section">
         <div class="container" style="text-align:center;">
           <div class="coming-soon-label">What&rsquo;s Next</div>
@@ -1753,8 +1753,8 @@ Add About/Origin Story section with CSS — answers the common objection    </di
             </div>
             <div class="cs-card">
               <span class="cs-card-badge">Coming Soon</span>
-              <h4>Multi-Symbol Indicator Scanner</h4>
-              <p>Scan across symbols simultaneously to surface high-probability trade ideas faster.</p>
+Contact</a></div>
+        </div>              <p>Scan across symbols simultaneously to surface high-probability trade ideas faster.</p>
             </div>
           </div>
           <div class="cs-loyalty">
@@ -1763,11 +1763,11 @@ Add About/Origin Story section with CSS — answers the common objection    </di
           <a href="https://t.me/+gg1BAyQXvwg1ODE1" target="_blank" rel="noopener" class="btn btn-secondary">Join Telegram for Launch Updates <span>&rarr;</span></a>
         </div>
       </section>        
-        <a href="#faq">FAQ</a>
+        <div class="footer-links"><a href="#faq">FAQ</a>
         <a href="#pricing">Pricing</a>
         <a href="#scenarios">Demo</a>
         <a href="#pnl">P&amp;L Proof</a>
-        <a href="mailto:prohftech@gmail.com">Contact</a>
+        <a href="mailto:prohftech@gmail.com">Contact</a></div>
 </div>
       <p>
         &copy; 2026 OpChain. Built for traders who value structure over noise.
@@ -1776,7 +1776,7 @@ Add About/Origin Story section with CSS — answers the common objection    </di
         Disclaimer: OpChain is an analytical tool. It does not guarantee profits and should be used with proper risk management.
       </p>
     </div>
-  </footer>
+  <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">Built with care using <a href="https://www.perplexity.ai" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Perplexity AI</a> &mdash; the AI assistant that made this possible. Thank you.</p>     </footer>
 
 <script>   const toggle = document.querySelector('.mobile-menu-toggle');   const navLinks = document.querySelector('.nav-links');   if (toggle && navLinks) {     toggle.addEventListener('click', () => {       navLinks.classList.toggle('open');       toggle.textContent = navLinks.classList.contains('open') ? '✕' : '☰';     });     navLinks.querySelectorAll('a').forEach(link => {       link.addEventListener('click', () => {         navLinks.classList.remove('open');         toggle.textContent = '☰';       });     });   } </script> <script>   const toggle = document.querySelector('.mobile-menu-toggle');   const navLinks = document.querySelector('.nav-links');   if (toggle && navLinks) {     toggle.addEventListener('click', () => {       navLinks.classList.toggle('open');       toggle.textContent = navLinks.classList.contains('open') ? '✕' : '☰';     });     navLinks.querySelectorAll('a').forEach(link => {       link.addEventListener('click', () => {         navLinks.classList.remove('open');         toggle.textContent = '☰';       });     });   } </script> </body>
 </html>
