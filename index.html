@@ -438,7 +438,7 @@
             border-color: rgba(47, 229, 100, 0.5);
         }
 
-        .pnl-item img {
+        .pnl-caption {           padding: 1rem;           font-size: 0.85rem;           color: var(--text-soft);           line-height: 1.6;           border-top: 1px solid rgba(47, 229, 100, 0.15);           background: rgba(5, 7, 19, 0.4);         }         .pnl-caption strong {           color: var(--green);           font-size: 0.9rem;           display: block;           margin-bottom: 0.4rem;         }         .pnl-caption em {           color: var(--gold);           font-style: normal;           font-weight: 600;         }         .pnl-item img {
             width: 100%;
             height: auto;
             display: block;
@@ -1311,9 +1311,9 @@
                 <h2 class="section-title">Personal P&amp;L Proof</h2>
                 <p class="section-subtitle">Transparent trade results and P&amp;L screenshots from real intraday sessions using OpChain. No simulated or backtested equity curves — only real trades.</p>
                 <div class="pnl-grid">
-                    <div class="pnl-item"><img src="pnl1.png" alt="P&amp;L Trade Result 1" /></div>
-                    <div class="pnl-item"><img src="pnl2.png" alt="P&amp;L Trade Result 2" /></div>
-                    <div class="pnl-item"><img src="pnl3.png" alt="P&amp;L Trade Result 3" /></div>
+                    <div class="pnl-item"><img src="pnl1.png" alt="P&amp;L Trade Result 1" /><div class="pnl-caption"><strong>Session 1</strong><br/>Nifty50 Strong Buy (82%) → ~100% profit.<br/>Strong Sell (95%) → another ~100%.<br/>Carried one overconfident short.<br/><em>Total: +218% on ₹1,000 capital.</em></div></div>
+                    <div class="pnl-item"><img src="pnl2.png" alt="P&amp;L Trade Result 2" /><div class="pnl-caption"><strong>Session 2</strong><br/>Nifty gapped up sharply, trapping shorts.<br/>OpChain flipped Strong Sell → Strong Buy (low conviction).<br/>Held short position.<br/><em>Avoided major loss on bear trap.</em></div></div>
+                    <div class="pnl-item"><img src="pnl3.png" alt="P&amp;L Trade Result 3" /><div class="pnl-caption"><strong>Session 3</strong><br/>Gap-down open. Closed carried short in profit.<br/>Sensex expiry quick long scalp.<br/><em>Total: +407% on ₹1,000 capital.</em></div></div>
                     
                 <p class="pnl-disclaimer">&#9888;&#65039; Past performance does not guarantee future results. All trades involve risk. This is shared for transparency and educational purposes only.</p>
             </div>
