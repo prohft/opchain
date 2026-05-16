@@ -157,6 +157,10 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .final-cta p { font-size: 1.25rem; color: var(--text-soft); margin-bottom: 2.5rem; }
+        .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .screenshot-item { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(216,177,90,0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+    .screenshot-item:hover { transform: scale(1.02); box-shadow: 0 16px 48px rgba(0,0,0,0.5); border-color: var(--gold); }
+    .screenshot-item img { width: 100%; height: auto; display: block; }
     .site-footer { border-top: 1px solid rgba(216, 177, 90, 0.2); padding: 3rem 0 2rem; text-align: center; color: var(--text-muted); }
     .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .footer-links a { color: var(--text-soft); text-decoration: none; transition: color 0.25s; }
