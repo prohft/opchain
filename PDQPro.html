@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ProHFT PDQ-Pro — Session Confluence & Trade Level Engine for TradingView</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="PDQ-Pro — a standalone TradingView indicator that combines price behavior and volume delta into one session read, with auto-generated bias, confidence grading, and reference trade levels.">
+//prohft.github.io/opchain/favicon.ico">
+<style>
+:root {
+  --bg: #020309;
+  --bg-panel: #050713;
+  --bg-panel-soft: #080b16;
+  --gold: #d8b15a;
+  --gold-soft: #f3de9c;
+  --green: #2fe564;
+  --green-soft: #63f49a;
+  --red: #ff4757;
+  --red-soft: #ff6b7a;
+  --text-main: #f7f5f0;
+  --text-soft: #d1cdc0;
+  --text-muted: #9a9586;
+  --radius-xl: 26px;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; padding: 0;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(99, 247, 150, 0.08), transparent 50%),
+    radial-gradient(circle at 85% 100%, rgba(237, 201, 112, 0.12), transparent 55%),
+    linear-gradient(145deg, #020309, #050713);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+.container { width: min(calc(100% - 2rem), 1200px); margin-inline: auto; padding-inline: 1.5rem; }
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(5, 7, 19, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(216, 177, 90, 0.2);
+  padding: 1.25rem 0;
+}
+.header-inner { display: flex; justify-content: space-between; align-items: center; }
+.logo {
+  font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--gold), var(--green-soft));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { color: var(--text-soft); text-decoration: none; font-size: 0.95rem; transition: color 0.25s; }
+.nav-links a:hover { color: var(--green); }
+.mobile-menu-toggle { display: none; background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
+.hero { padding: 5rem 0 4rem; text-align: center; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(47, 229, 100, 0.12);
+  border: 1px solid rgba(47, 229, 100, 0.3);
+  border-radius: 999px; font-size: 0.85rem; color: var(--green-soft);
+  margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--text-main), var(--gold-soft));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero p { font-size: clamp(1.1rem, 2vw, 1.35rem); color: var(--text-soft); max-width: 800px; margin: 0 auto 2.5rem; line-height: 1.6; }
+.cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.9rem 1.8rem; border-radius: var(--radius-lg);
+  font-weight: 600; font-size: 1rem; text-decoration: none;
+  transition: all 0.3s; border: none; cursor: pointer;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--green), #1fb352);
+  color: #000; box-shadow: 0 8px 24px rgba(47,229,100,0.35);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(47,229,100,0.45); }
+.btn-secondary { background: rgba(216,177,90,0.15); color: var(--gold); border: 1px solid rgba(216,177,90,0.4); }
+.btn-secondary:hover { background: rgba(216,177,90,0.25); border-color: var(--gold); }
+.section { padding: 5rem 0; }
+.section-label { text-align: center; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 1rem; }
+.section-title { text-align: center; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1rem; }
+.section-subtitle { text-align: center; font-size: 1.15rem; color: var(--text-soft); max-width: 700px; margin: 0 auto 3rem; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+.feature-card {
+  background: radial-gradient(circle at bottom right, rgba(47,229,100,0.08), transparent 60%), var(--bg-panel-soft);
+  border: 1px solid rgba(47,229,100,0.2); border-radius: var(--radius-lg); padding: 2.5rem;
+}
+.feature-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, rgba(47,229,100,0.25), rgba(47,229,100,0.1));
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.75rem; margin-bottom: 1.5rem;
+}
+.feature-card h3 { font-size: 1.4rem; margin-bottom: 1rem; color: var(--green-soft); }
+.feature-card p { color: var(--text-soft); line-height: 1.75; }
+.workflow-steps { max-width: 800px; margin: 3rem auto 0; }
+.step { display: flex; gap: 2rem; margin-bottom: 3rem; align-items: flex-start; }
+.step-number {
+  flex-shrink: 0; width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.75rem; font-weight: 800; color: #000;
+}
+.step-content h3 { font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--text-main); }
+.step-content p { color: var(--text-soft); line-height: 1.75; }
+.problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.problem-card {
+  background: radial-gradient(circle at top left, rgba(216,177,90,0.08), transparent 70%), var(--bg-panel);
+  border: 1px solid rgba(216,177,90,0.25); border-radius: var(--radius-lg); padding: 2rem;
+  transition: all 0.3s;
+}
+.problem-card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+.problem-icon {
+  width: 48px; height: 48px; background: rgba(216,177,90,0.2); border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;
+}
+.problem-card h3 { font-size: 1.3rem; margin-bottom: 0.75rem; color: var(--text-main); }
+.problem-card p { color: var(--text-soft); line-height: 1.7; }
+.pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.pain-card {
+  background: radial-gradient(circle at top left, rgba(255,71,87,0.08), transparent 70%), var(--bg-panel);
+  border: 1px solid rgba(255,71,87,0.25); border-radius: var(--radius-lg); padding: 2rem;
+  transition: all 0.3s;
+}
+.pain-card:hover { transform: translateY(-4px); border-color: var(--red-soft); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+.pain-icon {
+  width: 48px; height: 48px; background: rgba(255,71,87,0.15); border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;
+}
+.pain-card h3 { font-size: 1.2rem; margin-bottom: 0.75rem; color: var(--red-soft); }
+.pain-card p { color: var(--text-soft); line-height: 1.7; font-size: 0.975rem; }
+.diff-wrap { max-width: 850px; margin: 3rem auto 0; background: var(--bg-panel-soft); border: 1px solid rgba(216,177,90,0.2); border-radius: var(--radius-lg); padding: 2.5rem; }
+.diff-wrap h3 { color: var(--gold-soft); font-size: 1.35rem; margin-bottom: 1rem; }
+.diff-wrap p { color: var(--text-soft); margin-bottom: 1rem; line-height: 1.8; }
+.diff-wrap p:last-child { margin-bottom: 0; }
+.persona-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.persona-card {
+  background: var(--bg-panel); border: 1px solid rgba(47,229,100,0.2);
+  border-radius: var(--radius-lg); padding: 1.75rem;
+  text-align: center;
+}
+rem; margin-bottom: 0.75rem; }
+.persona-card h4 { font-size: 1.05rem; color: var(--green-soft); margin-bottom: 0.5rem; }
+.persona-card p { font-size: 0.9rem; color: var(--text-soft); line-height: 1.6; }
+.trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.trust-item {
+  background: var(--bg-panel); border: 1px solid rgba(216,177,90,0.18);
+  border-radius: var(--radius-lg); padding: 1.75rem 1.5rem;
+}
+.trust-item .trust-icon { font-size: 1.6rem; margin-bottom: 0.75rem; }
+.trust-item h4 { font-size: 1.05rem; color: var(--gold-soft); margin-bottom: 0.5rem; }
+.trust-item p { font-size: 0.9rem; color: var(--text-soft); line-height: 1.65; }
+.early-launch-banner {
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  background: linear-gradient(135deg, rgba(216,177,90,0.1), rgba(47,229,100,0.06));
+  border: 1px solid rgba(216,177,90,0.35); border-radius: var(--radius-lg);
+  padding: 2rem 2.25rem; margin-top: 3rem;
+}
+.elb-icon { flex-shrink: 0; font-size: 2rem; margin-top: 0.2rem; }
+.elb-body h3 { font-size: 1.25rem; color: var(--gold-soft); margin-bottom: 0.75rem; }
+.elb-body p { color: var(--text-soft); line-height: 1.75; font-size: 0.975rem; }
+.early-benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+.early-benefit-item {
+  background: var(--bg-panel); border: 1px solid rgba(47,229,100,0.18);
+  border-radius: var(--radius-lg); padding: 1.75rem 1.5rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.early-benefit-item:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); border-color: rgba(47,229,100,0.4); }
+.ebi-icon { font-size: 1.75rem; margin-bottom: 0.85rem; }
+.early-benefit-item h4 { font-size: 1.1rem; color: var(--green-soft); margin-bottom: 0.5rem; }
+.early-benefit-item p { font-size: 0.9rem; color: var(--text-soft); line-height: 1.7; }
+.faq-list { max-width: 800px; margin: 3rem auto 0; }
+.faq-item {
+  background: var(--bg-panel); border: 1px solid rgba(216,177,90,0.2);
+  border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 1.5rem;
+}
+.faq-item h3 { font-size: 1.25rem; color: var(--gold-soft); margin-bottom: 1rem; }
+.faq-item p { color: var(--text-soft); line-height: 1.75; }
+.mid-cta-section {
+  padding: 3rem 0;
+  background: linear-gradient(135deg, rgba(47,229,100,0.07), rgba(216,177,90,0.07));
+  border-top: 1px solid rgba(47,229,100,0.15); border-bottom: 1px solid rgba(216,177,90,0.15);
+}
+.mid-cta-box { display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+.mid-cta-text h3 { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.4rem; color: var(--gold-soft); }
+.mid-cta-text p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+.mid-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.final-cta {
+  background: linear-gradient(135deg, rgba(47,229,100,0.15), rgba(216,177,90,0.15));
+  border: 2px solid var(--gold); border-radius: var(--radius-xl);
+  padding: 5rem 3rem; text-align: center; margin: 5rem 0;
+}
+.final-cta h2 {
+  font-size: 2.75rem; margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--green-soft), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.final-cta p { font-size: 1.25rem; color: var(--text-soft); margin-bottom: 2.5rem; }
+.screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.screenshot-item {
+  border-radius: var(--radius-lg); overflow: hidden;
+  border: 1px solid rgba(216,177,90,0.3);
+  transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;
+}
+.screenshot-item:hover { transform: scale(1.02); box-shadow: 0 16px 48px rgba(0,0,0,0.5); border-color: var(--gold); }
+.screenshot-item img { width: 100%; height: auto; display: block; }
+.site-footer { border-top: 1px solid rgba(216, 177, 90, 0.2); padding: 3rem 0 2rem; text-align: center; color: var(--text-muted); }
+.footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.footer-links a { color: var(--text-soft); text-decoration: none; transition: color 0.25s; }
+.footer-links a:hover { color: var(--green); }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .mobile-menu-toggle { display: block; }
+  .nav-links.open {
+    display: flex; flex-direction: column; position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: rgba(5, 7, 19, 0.97);
+    border-top: 1px solid rgba(47, 229, 100, 0.15);
+    padding: 1rem 1.5rem; gap: 1rem; z-index: 99;
+  }
+  .hero { padding: 3rem 0 2rem; }
+  .section { padding: 3rem 0; }
+  .cta-group { flex-direction: column; }
+  .step { flex-direction: column; gap: 1rem; }
+  .final-cta { padding: 3rem 2rem; }
+  .final-cta h2 { font-size: 2rem; }
+  .early-launch-banner { flex-direction: column; gap: 1rem; }
+  .early-benefits-grid { grid-template-columns: 1fr; }
+  .mid-cta-box { flex-direction: column; text-align: center; }
+  .mid-cta-actions { justify-content: center; }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="https://prohft.github.io/opchain/" class="logo">ProHFT</a>
+    <ul class="nav-links">
+      ><a href="https://prohft.github.io/opchain/">OpChain</a></li>
+      ><a href="https://prohft.github.io/opchain/osob.html">OSOB</a></li>
+      ><a href="#faq">FAQ</a></li>
+      ><a href="mailto:prohftech@gmail.com">Support</a></li>
+    </ul>
+    <button class="mobile-menu-toggle">☰</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero container">
+    <div class="hero-badge">✨ ProHFT Standalone Indicator</div>
+    <h1>Stop Guessing Entries. Let Session Data Show You the Level.</h1>
+    <p>Knowing the bias isn't the hard part — knowing where to actually enter, stop, and take profit is. PDQ-Pro reads price behavior and volume delta together each session, then marks a bias, a confidence grade, and reference trade levels directly on your chart.</p>
+    <div class="cta-group">
+      <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get PDQ-Pro →</a>
+      <a href="#faq" class="btn btn-secondary">Read FAQ</a>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Sound familiar?</h2>
+    <p class="section-subtitle">Bias without structure leaves you hesitating at the exact moment you need to act.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">🤔</div>
+        <h3>Bias without levels means guessing entries</h3>
+        <p>You know the market "feels" bullish or bearish, but you're still eyeballing where to actually get in and where to get out.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔍</div>
+        <h3>Price alone misses what's under the surface</h3>
+        <p>Two sessions can look identical on a candle chart yet have completely different conviction behind the move — price alone won't tell you that.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">✏️</div>
+        <h3>Manual level-drawing is slow and inconsistent</h3>
+        <p>Redrawing entry, stop, and target zones by hand every session invites fatigue, inconsistency, and hesitation right when speed matters.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">What It Does</div>
+    <h2 class="section-title">Bias, confidence, and levels — automatically</h2>
+    <p class="section-subtitle">PDQ-Pro turns session data into a structured, repeatable read instead of a fresh guess every day.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Composite Session Score</h3>
+        <p>Price behavior and volume delta are scored independently, then combined into a single session read — so you see confluence, not just one side of the story.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏷️</div>
+        <h3>Bias & Confidence Grading</h3>
+        <p>Each session is tagged with a directional bias and a confidence grade, so you know not just "which way" but "how strongly."</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3>Auto-Generated Trade Levels</h3>
+        <p>Reference entry, stop, and target levels are plotted directly on the chart from session structure — no manual redrawing required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧬</div>
+        <h3>Confluence Filters</h3>
+        <p>Optional context tags flag conditions like displacement against bias, unusually tight or wide ranges, and exhaustion after repeated failed setups.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">Why It Works</div>
+    <h2 class="section-title">Why price and volume delta, together</h2>
+    <div class="diff-wrap">
+      <h3>The reasoning behind the read</h3>
+      <p>Price tells you where the market moved. Volume delta tells you how much conviction was behind that move. Read separately, either one can mislead you — a strong-looking candle on weak participation, or heavy volume on a session that goes nowhere.</p>
+      <p>PDQ-Pro scores both independently on the same session structure and combines them into one read. When price and delta agree, that's confluence worth acting on. When they diverge, that's flagged too — often the earliest hint that a move lacks the conviction to continue. The reference levels are then built from the same session structure, so they're grounded in how the market actually traded, not an arbitrary percentage or fixed distance.</p>
+      <p>The exact scoring mechanics and thresholds stay internal — that's what keeps the output consistent across symbols and sessions instead of being re-tuned into overfitting. What you see is the finished read: a bias, a confidence grade, and levels you can act on.</p>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">How to Use</div>
+    <h2 class="section-title">From read to trade, in four steps</h2>
+    <p class="section-subtitle">PDQ-Pro gives you structure and reference points — you still confirm and execute with discipline.</p>
+    <div class="workflow-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Read the session bias and confidence grade</h3>
+          <p>Start each session by checking the bias tag and how confidently it's graded before looking for setups.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Note the auto-plotted levels</h3>
+          <p>Treat the entry, stop, and target levels as reference zones built from session structure — not automatic orders.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Confirm with price action</h3>
+          <p>Validate the read with candle behavior, structure, and any confluence tags before committing to a position.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Manage risk on your terms</h3>
+          <p>Define your own position size and manage exits actively — PDQ-Pro provides structure, not execution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">Who This Is For</div>
+    <h2 class="section-title">Built for traders who want structure fast</h2>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">⏱️</div>
+        <h4>Session & day traders</h4>
+        <p>You need a clear structural read fast at the open, without piecing it together manually every morning.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">📶</div>
+        <h4>Order-flow-curious price action traders</h4>
+        <p>You already study price action and want a volume-based confirmation layer without learning a whole new discipline.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🔁</div>
+        <h4>Traders tired of discretionary guesswork</h4>
+        <p>You want a repeatable framework for entries and levels instead of redrawing lines from scratch every session.</p>
+      </div>
+    </div>
+  </section>
+    <section class="section container">
+    <div class="section-label">Important</div>
+    <h2 class="section-title">What PDQ-Pro is NOT</h2>
+    <p class="section-subtitle">Understand its boundaries before adding it to your workflow.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">⚠️</div>
+        <h3>Not a Standalone System</h3>
+        <p>PDQ-Pro does not execute trades or manage risk for you. It provides a structured read and reference levels for you to apply within your own strategy.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🔄</div>
+        <h3>Not Predictive</h3>
+        <p>Bias, confidence grades, and levels reflect session structure and current conditions. They do not guarantee future price movement.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📉</div>
+        <h3>Not Immune to Choppy Sessions</h3>
+        <p>Low-conviction, range-bound sessions can produce weaker or conflicting reads. Confidence grading exists precisely to flag this — always check it.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🎯</div>
+        <h3>Not Financial Advice</h3>
+        <p>This is an analytical tool for educational and informational use. All trading decisions and their outcomes are your responsibility.</p>
+      </div>
+    </div>
+
+    <div class="early-launch-banner">
+      <div class="elb-icon">🚀</div>
+      <div class="elb-body">
+        <h3>Ready to add PDQ-Pro to your toolkit?</h3>
+        <p>PDQ-Pro is a standalone TradingView indicator available on its own — no bundle or subscription required.</p>
+        <div class="cta-group" style="justify-content:flex-start; margin-top:1.25rem; margin-bottom:0;">
+          <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get PDQ-Pro →</a>
+          <a href="mailto:prohftech@gmail.com" class="btn btn-secondary">Ask a Question</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">Access & Trust</div>
+    <h2 class="section-title">What you actually get</h2>
+    <p class="section-subtitle">No hidden bundles, no unclear onboarding — here's exactly how access works.</p>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon">🔐</div>
+        <h4>Invite-Only TradingView Script</h4>
+        <p>Access is granted directly to your TradingView username as a private, invite-only indicator.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🧾</div>
+        <h4>Simple Request Process</h4>
+        <p>Submit the access request form with your TradingView username; access is typically granted within 24 hours.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🔁</div>
+        <h4>Fully Standalone</h4>
+        <p>PDQ-Pro works independently. You don't need OpChain or any other ProHFT product to use it.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">💬</div>
+        <h4>Direct Support</h4>
+        <p>Questions about setup or usage go straight to us via Telegram or email — no ticket queues.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">Alerts & Compatibility</div>
+    <h2 class="section-title">Built for real-time trading</h2>
+    <div class="early-benefits-grid">
+      <div class="early-benefit-item">
+        <div class="ebi-icon">🔔</div>
+        <h4>TradingView Alert Support</h4>
+        <p>Set alerts for new session bias reads or level touches, so you're notified without watching the chart constantly.</p>
+      </div>
+      <div class="early-benefit-item">
+        <div class="ebi-icon">📱</div>
+        <h4>Mobile & Desktop Alerts</h4>
+        <p>Receive push notifications via TradingView's mobile app or browser alerts so you never miss a session setup.</p>
+      </div>
+      <div class="early-benefit-item">
+        <div class="ebi-icon">🌐</div>
+        <h4>Any Market, Any Timeframe</h4>
+        <p>Works on stocks, indices, forex, crypto, and commodities — wherever TradingView data is available.</p>
+      </div>
+      <div class="early-benefit-item">
+        <div class="ebi-icon">⚙️</div>
+        <h4>Customizable Settings</h4>
+        <p>Adjust label sizes, level display modes, and optional confluence filters to match your trading style.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mid-cta-section">
+    <div class="container mid-cta-box">
+      <div class="mid-cta-text">
+        <h3>Stop redrawing levels from scratch every session.</h3>
+        <p>Get PDQ-Pro and start each session with structure already in place.</p>
+      </div>
+      <div class="mid-cta-actions">
+        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get PDQ-Pro →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" id="faq">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Common Questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3>What does PDQ-Pro actually do?</h3>
+        <p>PDQ-Pro scores price behavior and volume delta independently each session, combines them into a bias and confidence grade, and plots reference entry, stop, and target levels from session structure.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Do I need OpChain to use it?</h3>
+        <p>No. PDQ-Pro is a fully standalone indicator with its own access — you don't need OpChain or any other ProHFT product to use it.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can I use PDQ-Pro for intraday or scalping?</h3>
+        <p>Yes. It's built around session structure and works on intraday timeframes. Always confirm signals with price action and volume before entry.</p>
+      </div>
+      <div class="faq-item">
+        <h3>How is this different from a standard oscillator or pivot-level tool?</h3>
+        <p>PDQ-Pro combines an independent price read with a volume-delta read rather than relying on price alone, and derives its levels from actual session structure rather than a fixed formula like standard pivots.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Is the scoring and classification logic disclosed?</h3>
+        <p>No. The internal scoring framework and thresholds are proprietary and not shared publicly. The indicator is provided as-is for use within TradingView.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Does it work in choppy or low-volume sessions?</h3>
+        <p>PDQ-Pro includes a range-state and confidence-grading layer specifically to flag lower-conviction, choppier sessions — always check the grade before acting.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What markets and timeframes are supported?</h3>
+        <p>Any market with TradingView data: stocks, indices, forex, crypto, commodities, and futures, across any timeframe.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What do I get after purchase?</h3>
+        <p>You'll receive invite-only access to the PDQ-Pro script on TradingView tied to your username, along with setup guidance from our team.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta container">
+    <h2>Trade with structure, not guesswork</h2>
+    <p>Let PDQ-Pro handle the session read and reference levels. Get access now.</p>
+    <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get PDQ-Pro →</a>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://prohft.github.io/opchain/">OpChain Home</a>
+      <a href="https://prohft.github.io/opchain/osob.html">OSOB</a>
+      <a href="https://t.me/Prohft">Telegram</a>
+      <a href="mailto:prohftech@gmail.com">Email</a>
+    </div>
+    <p>ProHFT PDQ-Pro — Session confluence & trade level engine. Standalone indicator, for educational and analytical use only.</p>
+  </div>
+</footer>
+</body>
+</html>
