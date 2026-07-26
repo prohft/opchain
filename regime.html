@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>ProHFT Regime — Multi-Factor Market Regime Oscillator for TradingView</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Regime Oscillator — a multi-factor market condition indicator for TradingView that blends trend strength, momentum, and confirmation into one composite read.">
+<meta name="description" content="Regime — a standalone TradingView indicator that reads whether the market is trending, ranging, or transitioning, so you apply the right strategy at the right time.">
 //prohft.github.io/opchain/favicon.ico">
 <style>
 :root {
@@ -128,6 +128,44 @@ body {
 }
 .problem-card h3 { font-size: 1.3rem; margin-bottom: 0.75rem; color: var(--text-main); }
 .problem-card p { color: var(--text-soft); line-height: 1.7; }
+/* Pain-point section (red-tinted variant of problem-card) */
+.pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.pain-card {
+  background: radial-gradient(circle at top left, rgba(255,71,87,0.08), transparent 70%), var(--bg-panel);
+  border: 1px solid rgba(255,71,87,0.25); border-radius: var(--radius-lg); padding: 2rem;
+  transition: all 0.3s;
+}
+.pain-card:hover { transform: translateY(-4px); border-color: var(--red-soft); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+.pain-icon {
+  width: 48px; height: 48px; background: rgba(255,71,87,0.15); border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;
+}
+.pain-card h3 { font-size: 1.2rem; margin-bottom: 0.75rem; color: var(--red-soft); }
+.pain-card p { color: var(--text-soft); line-height: 1.7; font-size: 0.975rem; }
+/* Differentiation / philosophy section */
+.diff-wrap { max-width: 850px; margin: 3rem auto 0; background: var(--bg-panel-soft); border: 1px solid rgba(216,177,90,0.2); border-radius: var(--radius-lg); padding: 2.5rem; }
+.diff-wrap h3 { color: var(--gold-soft); font-size: 1.35rem; margin-bottom: 1rem; }
+.diff-wrap p { color: var(--text-soft); margin-bottom: 1rem; line-height: 1.8; }
+.diff-wrap p:last-child { margin-bottom: 0; }
+/* Persona / who-this-is-for section */
+.persona-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.persona-card {
+  background: var(--bg-panel); border: 1px solid rgba(47,229,100,0.2);
+  border-radius: var(--radius-lg); padding: 1.75rem;
+    text-align: center;
+}
+.persona-card .persona-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+.persona-card h4 { font-size: 1.05rem; color: var(--green-soft); margin-bottom: 0.5rem; }
+.persona-card p { font-size: 0.9rem; color: var(--text-soft); line-height: 1.6; }
+/* Trust / access details section */
+.trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.trust-item {
+  background: var(--bg-panel); border: 1px solid rgba(216,177,90,0.18);
+  border-radius: var(--radius-lg); padding: 1.75rem 1.5rem;
+}
+.trust-item .trust-icon { font-size: 1.6rem; margin-bottom: 0.75rem; }
+.trust-item h4 { font-size: 1.05rem; color: var(--gold-soft); margin-bottom: 0.5rem; }
+.trust-item p { font-size: 0.9rem; color: var(--text-soft); line-height: 1.65; }
 .early-launch-banner {
   display: flex; gap: 1.5rem; align-items: flex-start;
   background: linear-gradient(135deg, rgba(216,177,90,0.1), rgba(47,229,100,0.06));
@@ -214,9 +252,10 @@ body {
   <div class="container header-inner">
     <a href="https://prohft.github.io/opchain/" class="logo">ProHFT</a>
     <ul class="nav-links">
-      ><a href="https://prohft.github.io/opchain/#features">OpChain</a></li>
-      ><a href="https://prohft.github.io/opchain/#pricing">Pricing</a></li>
-      ><a href="https://prohft.github.io/opchain/#support">Support</a></li>
+      ><a href="https://prohft.github.io/opchain/">OpChain</a></li>
+      ><a href="https://prohft.github.io/opchain/osob.html">OSOB</a></li>
+      ><a href="#faq">FAQ</a></li>
+      ><a href="mailto:prohftech@gmail.com">Support</a></li>
     </ul>
     <button class="mobile-menu-toggle">☰</button>
   </div>
@@ -224,12 +263,35 @@ body {
 
 <main>
   <section class="hero container">
-    <div class="hero-badge">✨ ProHFT Indicator Series</div>
-    <h1>Regime<br>Market Condition Oscillator</h1>
-    <p>Cuts through noisy price action by blending trend strength, momentum, and confirmation into a single composite read of current market conditions. Know whether you're in a trending, ranging, or transitional regime before you place a trade.</p>
+    <div class="hero-badge">✨ ProHFT Standalone Indicator</div>
+    <h1>Know the Market's Mood Before You Trade It</h1>
+    <p>Most losing trades aren't wrong on direction — they're wrong on approach. Regime reads whether the market is trending, ranging, or shifting between the two, so you know which playbook actually fits right now, instead of finding out the hard way.</p>
     <div class="cta-group">
-      <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Request Access →</a>
+      <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get Regime →</a>
       <a href="#faq" class="btn btn-secondary">Read FAQ</a>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Sound familiar?</h2>
+    <p class="section-subtitle">Most traders don't lose because they can't read charts. They lose because they apply the wrong strategy to the wrong market condition.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">📉</div>
+        <h3>Trend strategies get chopped up</h3>
+        <p>You hold for a breakout that never extends because the market was actually ranging, not trending.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔁</div>
+        <h3>Reversal strategies get steamrolled</h3>
+        <p>You fade a move expecting mean-reversion, right as the market enters a genuine trending phase.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">❓</div>
+        <h3>You're guessing the regime, not reading it</h3>
+        <p>Without a consistent way to classify conditions, every session becomes a fresh guess — and guesses compound losses.</p>
+      </div>
     </div>
   </section>
 
@@ -241,23 +303,34 @@ body {
       <div class="feature-card">
         <div class="feature-icon">📈</div>
         <h3>Composite Oscillator</h3>
-        <p>A single line and zone-based coloring reflect the blended output of multiple internal factors, so you don't have to cross-reference several indicators manually.</p>
+        <p>A single line and zone-based coloring reflect the blended output of multiple internal factors, so you don't have to cross-reference several indicators manually before every trade.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🧭</div>
         <h3>Regime Classification</h3>
-        <p>Visually distinguishes trending, ranging, and transitional conditions directly on your chart, helping you match your strategy to the current environment.</p>
+        <p>Visually distinguishes trending, ranging, and transitional conditions directly on your chart, so switching strategies becomes a decision, not a guess.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🔔</div>
-        <h3>Alert Support</h3>
-        <p>Set TradingView alerts for regime shifts so you're notified the moment market conditions change meaningfully.</p>
+        <h3>Shift Alerts</h3>
+        <p>Get notified the moment market conditions change meaningfully, instead of realizing three losing trades later that the regime already flipped.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🕒</div>
-        <h3>Multi-Timeframe Use</h3>
-        <p>Works on any timeframe TradingView supports — from intraday scalping charts to daily and weekly swing views.</p>
+        <div class="feature-icon">🧩</div>
+        <h3>Fits Your Existing Strategy</h3>
+        <p>Regime is a context filter, not a replacement system. Keep your entries, exits, and risk rules — just apply them when conditions actually support them.</p>
       </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">Why It Works</div>
+    <h2 class="section-title">Why one factor alone isn't enough</h2>
+    <div class="diff-wrap">
+      <h3>The reasoning behind the read</h3>
+      <p>Trend strength alone can stay elevated during a slow grind that never actually trends. Momentum alone can spike on noise that fades within a few bars. Judged in isolation, each factor produces false reads often enough to erode confidence in any single indicator.</p>
+      <p>Regime doesn't rely on one measure. It requires multiple independent factors to agree before classifying a condition as trending or ranging, and flags the space in between as transitional — because that ambiguous middle ground is exactly where most bad trades get taken. The result is a read that's slower to flip but far less prone to whipsawing you between conflicting signals.</p>
+      <p>We don't publish the exact internal weighting or formula — that's what keeps the tool consistent and resistant to over-fitting by every trader tweaking it to their last trade. What you get is the output: a clean, actionable regime read you can build a repeatable process around.</p>
     </div>
   </section>
 
@@ -296,6 +369,28 @@ body {
       </div>
     </div>
   </section>
+
+  <section class="section container">
+    <div class="section-label">Who This Is For</div>
+    <h2 class="section-title">Built for traders who adapt, not force it</h2>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🔄</div>
+        <h4>Multi-strategy swing traders</h4>
+        <p>You run both trend and reversal setups and need a fast way to decide which one applies today.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">⚡</div>
+        <h4>Discretionary traders</h4>
+        <p>You want a quick context check before committing to a setup, without running four indicators side by side.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🎯</div>
+        <h4>Direction-right, timing-wrong traders</h4>
+        <p>You often call the move correctly but get stopped out because the approach didn't match the condition.</p>
+      </div>
+    </div>
+  </section>
   <section class="section container">
     <div class="section-label">Important</div>
     <h2 class="section-title">What Regime is NOT</h2>
@@ -327,11 +422,39 @@ body {
       <div class="elb-icon">🚀</div>
       <div class="elb-body">
         <h3>Ready to add Regime to your toolkit?</h3>
-        <p>Access is included with your OpChain subscription or available separately.</p>
+        <p>Regime is a standalone TradingView indicator available on its own — no bundle or subscription required.</p>
         <div class="cta-group" style="justify-content:flex-start; margin-top:1.25rem; margin-bottom:0;">
-          <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Request Access →</a>
-          <a href="https://prohft.github.io/opchain/#pricing" class="btn btn-secondary">View Pricing</a>
+          <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get Regime →</a>
+          <a href="mailto:prohftech@gmail.com" class="btn btn-secondary">Ask a Question</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-label">Access & Trust</div>
+    <h2 class="section-title">What you actually get</h2>
+    <p class="section-subtitle">No hidden bundles, no unclear onboarding — here's exactly how access works.</p>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon">🔐</div>
+        <h4>Invite-Only TradingView Script</h4>
+        <p>Access is granted directly to your TradingView username as a private, invite-only indicator.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🧾</div>
+        <h4>Simple Request Process</h4>
+        <p>Submit the access request form with your TradingView username; access is typically granted within 24 hours.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🔁</div>
+        <h4>Fully Standalone</h4>
+        <p>Regime works independently. You don't need OpChain or any other ProHFT product to use it.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">💬</div>
+        <h4>Direct Support</h4>
+        <p>Questions about setup or usage go straight to us via Telegram or email — no ticket queues.</p>
       </div>
     </div>
   </section>
@@ -363,6 +486,18 @@ body {
     </div>
   </section>
 
+  <section class="mid-cta-section">
+    <div class="container mid-cta-box">
+      <div class="mid-cta-text">
+        <h3>Stop mismatching strategy to market condition.</h3>
+        <p>Get Regime and know what you're trading into, every session.</p>
+      </div>
+      <div class="mid-cta-actions">
+        <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get Regime →</a>
+      </div>
+    </div>
+  </section>
+
   <section class="section container" id="faq">
     <div class="section-label">FAQ</div>
     <h2 class="section-title">Common Questions</h2>
@@ -372,8 +507,8 @@ body {
         <p>Regime blends multiple internal factors into a single composite oscillator that classifies current market conditions as trending, ranging, or transitional.</p>
       </div>
       <div class="faq-item">
-        <h3>Do I need OpChain to use Regime?</h3>
-        <p>No. Regime is a standalone indicator, but it's included as part of the full ProHFT indicator suite for OpChain subscribers.</p>
+        <h3>Do I need OpChain to use it?</h3>
+        <p>No. Regime is a fully standalone indicator with its own access — you don't need OpChain or any other ProHFT product to use it.</p>
       </div>
       <div class="faq-item">
         <h3>Can I use Regime for intraday trading?</h3>
@@ -388,16 +523,24 @@ body {
         <p>No. The internal calculation framework is proprietary and not shared publicly. The indicator is provided as-is for use within TradingView.</p>
       </div>
       <div class="faq-item">
+        <h3>Does it repaint or lag?</h3>
+        <p>Regime updates on confirmed bar data for its classification logic. Like any composite read, brief transitional readings can occur around fast-moving conditions — this is disclosed, not hidden.</p>
+      </div>
+      <div class="faq-item">
         <h3>What markets does Regime support?</h3>
         <p>Any market with TradingView data: stocks, indices, forex, crypto, commodities, futures. The logic is market-agnostic.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What do I get after purchase?</h3>
+        <p>You'll receive invite-only access to the Regime script on TradingView tied to your username, along with setup guidance from our team.</p>
       </div>
     </div>
   </section>
 
   <section class="final-cta container">
     <h2>Trade smarter with Regime</h2>
-    <p>Know the market's condition before you commit to a strategy. Request access now.</p>
-    <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Request Access →</a>
+    <p>Know the market's condition before you commit to a strategy. Get access now.</p>
+    <a href="https://forms.gle/n4W2A7LJ8ivnmCX69" class="btn btn-primary">Get Regime →</a>
   </section>
 </main>
 
@@ -405,11 +548,11 @@ body {
   <div class="container">
     <div class="footer-links">
       <a href="https://prohft.github.io/opchain/">OpChain Home</a>
-      <a href="https://prohft.github.io/opchain/#pricing">Pricing</a>
+      <a href="https://prohft.github.io/opchain/osob.html">OSOB</a>
       <a href="https://t.me/Prohft">Telegram</a>
       <a href="mailto:prohftech@gmail.com">Email</a>
     </div>
-    <p>ProHFT Regime — Multi-factor market condition oscillator. For educational and analytical use only.</p>
+    <p>ProHFT Regime — Multi-factor market condition oscillator. Standalone indicator, for educational and analytical use only.</p>
   </div>
 </footer>
 </body>
