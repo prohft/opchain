@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ProHFT Regime – Multi-Factor Market Regime Oscillator for TradingView</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Regime Oscillator – a multi-factor market condition indicator for TradingView that blends trend strength, momentum, and confirmation into one composite regime line.">
+  <link rel="icon" href="https://prohft.github.io/opchain/favicon.ico">
+  <style>
+    :root {
+      --bg: #050510;
+      --bg-alt: #0b0b18;
+      --accent: #5b8cff;
+      --accent-soft: rgba(91, 140, 255, 0.12);
+      --accent-strong: #8b5bff;
+      --text: #f5f5f7;
+      --muted: #9b9bb3;
+      --border: #23233a;
+      --danger: #ff5c7a;
+      --success: #4cd964;
+      --warning: #ffcc00;
+      --card-radius: 14px;
+      --shadow-soft: 0 18px 60px rgba(0, 0, 0, 0.55);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                   "Inter", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      background: radial-gradient(circle at top, #161633 0, #050510 55%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 5, 16, 0.92),
+        rgba(5, 5, 16, 0.85)
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .nav {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .nav-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #5b8cff);
+      box-shadow: 0 0 12px rgba(91, 140, 255, 0.8);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      position: relative;
+      padding-bottom: 3px;
+    }
+
+    .nav-links a.nav-primary {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      transition: width 0.18s ease-out;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: radial-gradient(circle at top left, rgba(91, 140, 255, 0.18), transparent);
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .nav-cta span {
+      opacity: 0.75;
+    }
+
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 20px 72px;
+    }
+
+    .badge-row {
+      font-size: 11px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent);
+    }
+
+    .badge-pill span {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 0 10px rgba(91, 140, 255, 0.9);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3.1fr) minmax(0, 2.4fr);
+      gap: 26px;
+      align-items: center;
+      margin-bottom: 42px;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 4vw, 34px);
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 540px;
+    }
+
+    .hero-subtitle strong {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      box-shadow: 0 12px 30px rgba(22, 98, 255, 0.55);
+    }
+
+    .btn-primary span {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.04), transparent);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .btn-ghost span {
+      font-size: 15px;
+      opacity: 0.65;
+    }
+
+    .hero-highlight {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .hero-highlight strong {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .hero-card {
+      border-radius: var(--card-radius);
+      background: radial-gradient(circle at top left, rgba(91, 140, 255, 0.16), rgba(7, 7, 18, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 18px 18px 14px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .hero-card-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .hero-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .hero-chip {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(5, 5, 16, 0.75);
+    }
+
+    .hero-card-metric {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 5px 0 8px;
+    }
+
+    .hero-metric-value {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .hero-metric-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .hero-card-bars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .hero-bar {
+      height: 34px;
+      border-radius: 999px;
+      background: linear-gradient(to top, rgba(255, 255, 255, 0.06), rgba(91, 140, 255, 0.85));
+      opacity: 0.82;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bar:nth-child(2) {
+      height: 22px;
+      opacity: 0.65;
+      background: linear-gradient(to top, rgba(255, 255, 255, 0.06), rgba(255, 188, 92, 0.9));
+    }
+
+    .hero-bar:nth-child(3) {
+      height: 28px;
+      background: linear-gradient(to top, rgba(255, 255, 255, 0.05), rgba(140, 255, 175, 0.9));
+    }
+
+    .hero-bar:nth-child(4) {
+      height: 18px;
+      opacity: 0.6;
+      background: linear-gradient(to top, rgba(255, 255, 255, 0.04), rgba(255, 92, 155, 0.9));
+    }
+
+    .hero-card-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .hero-card-footer span strong {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.8fr);
+      gap: 20px;
+      margin-top: 18px;
+    }
+
+    .feature-card {
+      border-radius: var(--card-radius);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(5, 5, 16, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feature-card h3 {
+      font-size: 14px;
+      margin: 0 0 4px;
+    }
+
+    .feature-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .feature-tag {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 4px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .feature-item h4 {
+      font-size: 13px;
+      margin: 0 0 3px;
+    }
+
+    .feature-item p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(5, 5, 16, 0.86);
+    }
+
+    .numbered-list {
+      counter-reset: step;
+      margin-top: 12px;
+    }
+
+    .numbered-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: flex-start;
+    }
+
+    .numbered-index {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .numbered-content {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .pill-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      box-shadow: 0 0 10px rgba(91, 140, 255, 0.9);
+    }
+
+    .columns-2 {
+      columns: 2;
+      column-gap: 16px;
+      margin-top: 12px;
+    }
+
+    .bullet {
+      break-inside: avoid;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .bullet strong {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .callout {
+      border-radius: var(--card-radius);
+      background: linear-gradient(90deg, rgba(91, 140, 255, 0.14), rgba(5, 5, 16, 0.96));
+      border: 1px solid rgba(91, 140, 255, 0.35);
+      padding: 12px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    .callout strong {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .panel {
+      border-radius: var(--card-radius);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(5, 5, 16, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .panel h3 {
+      font-size: 14px;
+      margin: 0 0 6px;
+      color: #ffffff;
+    }
+
+    .panel h4 {
+      font-size: 13px;
+      margin: 10px 0 4px;
+      color: #ffffff;
+    }
+
+    .panel p {
+      margin: 0 0 4px;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .scenario-card {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05), rgba(5, 5, 16, 0.96));
+      padding: 10px 11px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .scenario-title {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 2px;
+      color: #ffffff;
+    }
+
+    .scenario-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .faq {
+      margin-top: 16px;
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(135deg, rgba(5, 5, 16, 0.96), rgba(0, 0, 0, 0.95));
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .faq-item {
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .faq-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .faq-q {
+      font-size: 13px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .faq-a {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .cta {
+      border-radius: var(--card-radius);
+      background: radial-gradient(circle at top left, rgba(91, 140, 255, 0.18), rgba(5, 5, 16, 0.96));
+      border: 1px solid rgba(91, 140, 255, 0.35);
+      padding: 16px 18px;
+      margin-top: 10px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .cta-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .cta-text {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .cta-note {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    footer {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 20px 30px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    @media (max-width: 840px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-card {
+        order: -1;
+      }
+      .grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .scenario-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+      .nav-cta {
+        display: none;
+      }
+      main {
+        padding-inline: 18px;
+      }
+      .scenario-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .columns-2 {
+        columns: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="nav-left">
+      <div class="nav-dot"></div>
+      <a href="https://prohft.github.io/opchain/" style="color:inherit;text-decoration:none;">ProHFT</a>
+      <span style="opacity:0.6;">Indicator Series</span>
+    </div>
+    <div class="nav-links">
+      <a href="https://prohft.github.io/opchain/">OpChain</a>
+      <a href="https://prohft.github.io/opchain/osob.html">OSOB</a>
+      <a href="#features" class="nav-primary">Regime</a>
+      <a href="https://prohft.github.io/opchain/#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://prohft.github.io/opchain/#support">Support</a>
+      <a href="https://prohft.github.io/opchain/#referral">Partner</a>
+    </div>
+    <a class="nav-cta" href="https://forms.gle/n4W2A7LJ8ivnmCX69">
+      <span>Request Access</span>
+    </a>
+  </div>
+</header>
+
+<main>
+  <div class="badge-row">
+    <div class="badge-pill">
+      <span class="badge-dot"></span>
+      <span>ProHFT Indicator Series</span>
+    </div>
+    <span>Built for intraday & swing traders · TradingView</span>
+  </div>
+
+  <section class="hero" id="top">
+    <div>
+      <h1 class="hero-title">Regime Oscillator</h1>
+      <p class="hero-subtitle">
+        A multi-factor market condition indicator designed to help traders read
+        <strong>trend strength, directional pressure, and regime shifts</strong> from one clean oscillator pane —
+        without cluttering your chart with a dozen separate tools.[file:3]
+      </p>
+      <div class="hero-cta-row">
+        <a class="btn-primary" href="https://forms.gle/n4W2A7LJ8ivnmCX69">
+          <span>➜</span>
+          <span>Request Regime Access</span>
+        </a>
+        <a class="btn-ghost" href="#faq">
+          <span>?</span>
+          <span>Read Regime FAQ</span>
+        </a>
+      </div>
+      <p class="hero-highlight">
+        Includes access via OpChain subscription, or available as a separate indicator on request.[page:1][page:2]
+      </p>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-header">
+        <div>
+          <div class="hero-card-title">Composite Regime Snapshot</div>
+          <div class="hero-chip-row">
+            <div class="hero-chip">Composite Regime Line</div>
+            <div class="hero-chip">Trend Strength Events</div>
+            <div class="hero-chip">Bull/Bear Triggers</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:right;">
+          Intraday Session<br>
+          <span style="color:#fff;">Live Market Example</span>
+        </div>
+      </div>
+      <div class="hero-card-metric">
+        <div class="hero-metric-value">+64</div>
+        <div class="hero-metric-label">
+          Regime score above internal midline.<br>
+          Stronger bullish conditions confirmed.
+        </div>
+      </div>
+      <div class="hero-card-bars">
+        <div class="hero-bar"></div>
+        <div class="hero-bar"></div>
+        <div class="hero-bar"></div>
+        <div class="hero-bar"></div>
+      </div>
+      <div class="hero-card-footer">
+        <span><strong>Use Regime as a market filter.</strong> Trade only when trend quality aligns with your setup.</span>
+        <span style="font-size:10px;">Illustrative mockup – not a signal feed.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="section-label">What It Does</div>
+    <div class="section-title">Clear regime read, one oscillator</div>
+    <p class="section-subtitle">
+      Regime Oscillator blends multiple internal confirmations into a single composite line, helping you
+      quickly see whether conditions favour <strong>bullish expansion, bearish pressure, or neutral/transition phases</strong>.[file:3]
+    </p>
+
+    <div class="grid-2" style="margin-top:18px;">
+      <div class="feature-card">
+        <div class="feature-tag">Core Components</div>
+        <h3>Composite regime view</h3>
+        <p>
+          Instead of checking trend, volatility, and momentum tools separately, Regime Oscillator compresses that
+          information into a unified regime line and an optional smoothing baseline.[file:3]
+        </p>
+        <div class="chip-row">
+          <div class="chip">Composite line with internal normalization</div>
+          <div class="chip">Optional moving-average overlay</div>
+          <div class="chip">Configurable confirmation inputs</div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-tag">Visual Cues</div>
+        <h3>Triggers, divergences & strength marks</h3>
+        <p>
+          The indicator can flag <strong>bullish and bearish trigger events</strong>, visualize divergence-style conditions,
+          and mark when trend strength crosses key internal thresholds — all on a dedicated oscillator pane.[file:3]
+        </p>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <h4>Bull/Bear trigger marks</h4>
+            <p>See when internal confirmations align for potential bullish or bearish conditions.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Trend strength markers</h4>
+            <p>Optional shapes highlight when composite and its baseline agree on stronger trends.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Divergence events</h4>
+            <p>Dedicated labels for composite-level divergence-style behaviour, without exposing algorithms.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Momentum histogram (optional)</h4>
+            <p>See composite momentum at a glance with a histogram view if you want more detail.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Note:</strong> Regime Oscillator is an analytical tool. It does not reveal its internal formulas,
+      weights, or thresholds publicly and should be used alongside your own strategy and risk management.[file:3][page:1]
+    </div>
+  </section>
+
+  <section id="workflow">
+    <div class="section-label">How To Use</div>
+    <div class="section-title">Trade with regime context, not impulse</div>
+    <p class="section-subtitle">
+      Regime is best used as a <strong>filter and confirmation layer</strong>. It helps you avoid trading into weak
+      conditions and focus your attention when multiple internal factors line up.[file:3]
+    </p>
+
+    <div class="grid-2" style="margin-top:18px;">
+      <div>
+        <div class="pill-label">
+          <span class="pill-dot"></span>
+          <span>Suggested reading flow</span>
+        </div>
+        <div class="numbered-list">
+          <div class="numbered-item">
+            <div class="numbered-index">1</div>
+            <div class="numbered-content">
+              <strong>Check the composite regime level.</strong>  
+              Is the line holding above or below its internal midline? This gives you an instant sense of whether conditions favour buyers, sellers, or a balanced state.
+            </div>
+          </div>
+          <div class="numbered-item">
+            <div class="numbered-index">2</div>
+            <div class="numbered-content">
+              <strong>Compare against the baseline.</strong>  
+              When the composite and its moving-average baseline agree on direction, it often signals cleaner trend conditions than when they are fighting each other.
+            </div>
+          </div>
+          <div class="numbered-item">
+            <div class="numbered-index">3</div>
+            <div class="numbered-content">
+              <strong>Watch for trigger marks.</strong>  
+              Bullish or bearish trigger markers highlight moments when selected internal confirmations have aligned on the latest confirmed bar, not mid-candle.
+            </div>
+          </div>
+          <div class="numbered-item">
+            <div class="numbered-index">4</div>
+            <div class="numbered-content">
+              <strong>Respect divergence and strength events.</strong>  
+              Divergence-style labels and trend-strength markers can act as early warnings around potential exhaustion, regime shifts, or consolidation zones.
+            </div>
+          </div>
+          <div class="numbered-item">
+            <div class="numbered-index">5</div>
+            <div class="numbered-content">
+              <strong>Align with your price action.</strong>  
+              Use Regime as a decision layer over your existing system. Enter only when your strategy and regime conditions agree, or stand aside when they conflict.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Best use cases</h3>
+        <h4>Market filter for intraday and swing</h4>
+        <p>
+          Use Regime as a higher-level filter to decide whether you should be focusing on longs, shorts,
+          or simply waiting for better structure before committing capital.
+        </p>
+        <h4>Trend quality confirmation</h4>
+        <p>
+          When the oscillator and its baseline both hold on the same side of the midline, it often
+          reflects more stable conditions for trend-following setups compared to choppy regimes.
+        </p>
+        <h4>Pullbacks and transitions</h4>
+        <p>
+          Combine your favourite pullback entries or breakout triggers with regime context. For example,
+          a pullback into support is more meaningful when the composite regime still favours the underlying trend.
+        </p>
+        <h4>Risk throttling</h4>
+        <p>
+          Scale down during weak or mixed regimes and reserve more aggressive sizing for clean,
+          confirmed phases — rather than treating every signal with equal weight.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="scenarios">
+    <div class="section-label">Signal Context</div>
+    <div class="section-title">Example regime states</div>
+    <p class="section-subtitle">
+      The following scenarios show how traders typically interpret different combinations of the composite line,
+      baseline, triggers, and strength events. These are <strong>illustrative examples only</strong>, not fixed rules.[file:3]
+    </p>
+
+    <div class="scenario-grid">
+      <div class="scenario-card">
+        <div class="scenario-tag">Scenario · Strong Bullish Regime</div>
+        <div class="scenario-title">Composite &amp; baseline above midline</div>
+        <p>
+          Both composite and its moving-average baseline hold firmly above the internal midline, with
+          recurring bullish triggers and occasional trend-strength marks. Traders may prioritise long setups,
+          focus on continuation structures, and avoid counter-trend shorts in this environment.
+        </p>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-tag">Scenario · Transitional Regime</div>
+        <div class="scenario-title">Composite crossing baseline</div>
+        <p>
+          The composite oscillates around the midline or crosses its baseline repeatedly, with mixed trigger
+          events and limited strength markers. Conditions may favour reduced size, shorter holding periods,
+          or simply waiting for a cleaner regime before committing to directional trades.
+        </p>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-tag">Scenario · Strong Bearish Regime</div>
+        <div class="scenario-title">Composite &amp; baseline below midline</div>
+        <p>
+          The composite and baseline stay below the internal midline with repeated bearish triggers and weak
+          attempts to reclaim the midpoint. Traders may give more weight to short setups, resist fading
+          downtrends prematurely, and treat bullish bounces as potential rallies into resistance.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Reminder:</strong> Regime Oscillator is not a mechanical system. It is a visual decision layer
+      designed to work with your existing strategy, risk rules, and timeframes.[page:1]
+    </div>
+  </section>
+
+  <section id="controls">
+    <div class="section-label">Customization</div>
+    <div class="section-title">Built for flexible workflows</div>
+    <p class="section-subtitle">
+      Regime Oscillator includes several configuration options so you can adapt how much information
+      you see and how aggressively you want confirmations to participate in the composite.[file:3]
+    </p>
+
+    <div class="grid-2" style="margin-top:18px;">
+      <div class="feature-card">
+        <div class="feature-tag">Display Controls</div>
+        <h3>Keep the pane as simple or detailed as you like</h3>
+        <div class="columns-2">
+          <div class="bullet">
+            <strong>Composite line on/off</strong> – focus solely on baseline or use both for more detail.
+          </div>
+          <div class="bullet">
+            <strong>Baseline toggle</strong> – show or hide the composite moving-average overlay.
+          </div>
+          <div class="bullet">
+            <strong>Momentum histogram</strong> – optional view for composite momentum changes.
+          </div>
+          <div class="bullet">
+            <strong>Trigger markers</strong> – enable or disable bull/bear trigger visuals.
+          </div>
+          <div class="bullet">
+            <strong>Divergence labels</strong> – show composite divergence-style events when you need them.
+          </div>
+          <div class="bullet">
+            <strong>Trend strength symbols</strong> – pick from triangles, circles, diamonds, or labels.
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-tag">Internal Confirmations</div>
+        <h3>Multi-factor design (with proprietary internals)</h3>
+        <p>
+          Under the hood, Regime Oscillator can combine several confirmation inputs into its composite read.
+          You control which confirmations participate, but the exact formulas and weights remain proprietary.[file:3]
+        </p>
+        <div class="columns-2">
+          <div class="bullet">
+            <strong>Toggle confirmations</strong> – enable or disable specific confirmation groups depending on your style.
+          </div>
+          <div class="bullet">
+            <strong>Smoothing controls</strong> – adjust how reactive or smooth you want the composite line to be.
+          </div>
+          <div class="bullet">
+            <strong>Normalization windows</strong> – internal lookback design keeps the composite comparable over time.
+          </div>
+          <div class="bullet">
+            <strong>Alert-ready</strong> – internal states and events can be wired into TradingView alerts without exposing logic.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="section-label">FAQ</div>
+    <div class="section-title">Common questions about Regime</div>
+    <p class="section-subtitle">
+      If you have a specific workflow in mind (scalping, positional, multi-timeframe), you can always
+      reach out via Telegram or email for guidance on how to integrate Regime into your setup.[page:2]
+    </p>
+
+    <div class="faq">
+      <div class="faq-item">
+        <div class="faq-q">What does Regime Oscillator actually do?</div>
+        <div class="faq-a">
+          Regime Oscillator provides a <strong>composite view of market conditions</strong> by combining multiple internal
+          confirmations into a single regime line and baseline. It helps you see whether conditions favour bullish,
+          bearish, or neutral behaviour at a glance, without revealing exact formulas or internal logic.[file:3]
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Is this a standalone trading system?</div>
+        <div class="faq-a">
+          No. Similar to OSOB, Regime Oscillator is a <strong>timing and context tool</strong>, not a complete strategy.[page:1][file:2]
+          It does not provide fixed entry, exit, or position sizing rules. You should integrate it with your
+          existing setups, risk management, and higher-timeframe structure.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Does Regime repaint or use unfinished bars?</div>
+        <div class="faq-a">
+          The indicator is designed around <strong>confirmed bars</strong> for its visual cues and events, so you are not
+          reacting to mid-bar noise or incomplete candles for the main regime logic.[file:3] As with any TradingView
+          indicator, always check how it behaves on your chosen timeframe and symbol before committing real capital.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Which markets and timeframes can I use it on?</div>
+        <div class="faq-a">
+          Regime works wherever your TradingView data is available — indices, stocks, futures, forex, crypto, and more.[page:1][file:2]
+          You can apply it on intraday charts for scalping and day trading, or on higher timeframes for swing and positional
+          context. Many traders choose a default timeframe and then cross-check with a higher frame for structure.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Is the core logic disclosed?</div>
+        <div class="faq-a">
+          No. The internal calculation framework, weights, and thresholds are <strong>proprietary</strong> and are not shared publicly,
+          similar to OpChain and OSOB.[page:1][page:2] Regime is provided as a compiled TradingView indicator for analytical
+          and educational use.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Do I need OpChain to use Regime?</div>
+        <div class="faq-a">
+          Regime can be used as a <strong>standalone indicator</strong> on TradingView, but it is also designed to complement
+          the OpChain suite. OpChain users can treat Regime as an additional regime filter over option-chain and
+          price-action context for more disciplined decision-making.[page:2]
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <div class="cta-title">Ready to add Regime to your toolkit?</div>
+      <div class="cta-text">
+        Use Regime Oscillator as your market-condition dashboard: focus on higher-quality trends, avoid low-conviction chop,
+        and let the composite regime line guide where your attention goes each session.[file:3]
+      </div>
+      <div class="cta-row">
+        <a class="btn-primary" href="https://forms.gle/n4W2A7LJ8ivnmCX69">
+          <span>➜</span>
+          <span>Request Regime Access</span>
+        </a>
+        <span class="cta-note">
+          Access, pricing, and setup are handled via the same onboarding flow used for OpChain and OSOB.[page:2][page:1]
+        </span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    ProHFT Regime — Multi-factor market regime oscillator. For educational and analytical use only.[file:3]
+  </div>
+  <div class="footer-links">
+    <a href="https://prohft.github.io/opchain/">OpChain Home</a>
+    <a href="https://prohft.github.io/opchain/#pricing">Pricing</a>
+    <a href="https://t.me/Prohft">Telegram</a>
+    <a href="mailto:prohftech@gmail.com">Email</a>
+  </div>
+</footer>
+</body>
+</html>
